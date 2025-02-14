@@ -1,5 +1,7 @@
 local Parent = script.Parent
-	local Settings = require(script.Settings)
+	local Settings = require(script:WaitForChild("Settings"))
+	
+	print(Settings)
 	
 	local TS = game:GetService("TweenService")
 	local IS = game:GetService("InsertService")
