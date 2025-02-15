@@ -120,6 +120,7 @@ local function RemoveCartItem(CustomerCart, CashierCart)
 end
 
 local function PrintReceipt(SystemName ,ReceiptPrinter, PlayerWhoPaid, Total)
+	local Products = Settings.Products
 	local Receipt = ReceiptPrinter:WaitForChild("Receipt")
 
 	Receipt.Transparency = 0
@@ -146,7 +147,7 @@ local function PrintReceipt(SystemName ,ReceiptPrinter, PlayerWhoPaid, Total)
 			if Item:IsA("Tool") then
 				local ItmLabel = script.ItemLbl:Clone()
 
-				ItmLabel.Text = Item.Name
+				ItmLabel.Text = Item.Name.. " : ".. Products[Item.Name].Price
 
 				ItmLabel.Parent = ReceiptClone.Handle.SurfaceGui.Frame.items
 			end
@@ -159,7 +160,7 @@ local function PrintReceipt(SystemName ,ReceiptPrinter, PlayerWhoPaid, Total)
 		Receipt.Transparency = 1
 		--Receipt.Position = ReceiptPrinter.ReceiptStart.Position
 		
-		ClearItems()
+		ClearItems("ITEMS_".. SystemName)
 	end
 end
 
