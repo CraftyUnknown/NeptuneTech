@@ -252,6 +252,7 @@ for _, System in pairs(POS:GetChildren()) do
 			
 			local s, e = pcall(function()
 				if CardReaderUI:FindFirstChild("Idle") then
+					print("Chaning reader logo...")
 					CardReaderUI.Idle.Logo = Settings.Logo
 				end
 			end)
