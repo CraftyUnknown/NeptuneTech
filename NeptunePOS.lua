@@ -302,11 +302,7 @@ for _, System in pairs(POS:GetChildren()) do
 					
 					wait(3)
 					
-					if CashierScreen:FindFirstChild("BootupSound") then
-						CashierScreen.BootupSound:Play()
-					else
-						warn("Boot up sound not found!")
-					end
+					CashierScreen.BootupSound:Play()
 					
 					wait(5)
 					
