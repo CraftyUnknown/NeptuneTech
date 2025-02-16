@@ -256,6 +256,10 @@ for _, System in pairs(POS:GetChildren()) do
 					CardReaderUI.Idle.Logo = Settings.Logo
 				end
 			end)
+			
+			if e then
+				warn(e)
+			end
 
 			local Addons = Parent.Addons
 
