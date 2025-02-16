@@ -264,8 +264,6 @@ for _, System in pairs(POS:GetChildren()) do
 			local Addons = Parent.Addons
 
 			CashierUI.Name = "CASHIER_GUI_".. System.Name
-			CashierUI.Parent = game.StarterGui
-			CashierUI.Adornee = CashierScreen.Display
 
 			CustomerUI.Main.Background.ImageColor3 = Settings.BackgroundColor
 			CustomerUI.Main.Staticbackground.BackgroundColor3 = Settings.BackgroundColor
@@ -318,6 +316,9 @@ for _, System in pairs(POS:GetChildren()) do
 			else
 				print("Skipping Startup Simulation...")
 			end
+			
+			CashierUI.Parent = game.StarterGui
+			CashierUI.Adornee = CashierScreen.Display
 			
 			for _, Plr in pairs(game.Players:GetChildren()) do
 				if Plr:IsA("Player") then
