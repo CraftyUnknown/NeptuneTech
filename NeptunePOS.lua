@@ -295,6 +295,15 @@ for _, System in pairs(POS:GetChildren()) do
 					print("Simulating Startup...")
 
 					CashierUI.Startup.Visible = true
+					
+					wait(3)
+					
+					if CashierScreen:FindFirstChild("Startup") then
+						CashierScreen.Startup:Play()
+					end
+					
+					wait(5)
+					
 					CashierUI.Startup.Console.Visible = true
 
 					wait(1)
