@@ -291,8 +291,9 @@ for _, System in pairs(POS:GetChildren()) do
 			end
 			
 			if Settings.SimulateStartup == true then
-				print("Simulating Startup...")
 				if CashierUI:FindFirstChild("Startup") then
+					print("Simulating Startup...")
+					
 					CashierUI.Startup.Visible = true
 					CashierUI.Startup.Console.Visible = true
 					
