@@ -164,17 +164,17 @@ end
 
 local function Payment(Reader, ReaderUI, Total)
 	local Status, Player = false, nil
-	
+
 	task.wait(1.5)
-	
+
 	if ReaderUI:FindFirstChild("Idle") then
 		ReaderUI.Idle.Visible = false
 	end
-	
+
 	if Reader.Screen:FindFirstChild("Beep") then
 		Reader.Screen.Beep:Play()
 	end
-	
+
 	ReaderUI.Main.Payment.Status.Visible = true
 	ReaderUI.Main.Payment.Status.Text = Settings.FormatCurrency(Total)
 	Reader.Screen.Pay.Enabled = true
@@ -192,7 +192,7 @@ local function Payment(Reader, ReaderUI, Total)
 	Reader.Screen.Contactless:Play()
 	Reader.Screen.Pay.Enabled = false
 	ReaderUI.Main.Payment.Status.Visible = false
-	
+
 	if ReaderUI:FindFirstChild("Idle") then
 		task.spawn(function()
 			task.wait(3)
@@ -249,14 +249,14 @@ for _, System in pairs(POS:GetChildren()) do
 			local CashierUI = CashierScreen.Display:FindFirstChild("GUI")
 			local CustomerUI = CustomerScreen.Display:FindFirstChild("GUI")
 			local CardReaderUI = CardReaderScreen:WaitForChild("GUI")
-			
+
 			local s, e = pcall(function()
 				if CardReaderUI:FindFirstChild("Idle") then
 					--print("Chaning reader logo...")
 					CardReaderUI.Idle.Logo = Settings.Logo
 				end
 			end)
-			
+
 			if e then
 				warn(e)
 			end
@@ -289,16 +289,16 @@ for _, System in pairs(POS:GetChildren()) do
 			else
 				warn(Prefix.. "UI not found!")
 			end
-			
+
 			if Settings.SimulateStartup == true then
 				if CashierUI:FindFirstChild("Startup") then
 					print("Simulating Startup...")
-					
+
 					CashierUI.Startup.Visible = true
 					CashierUI.Startup.Console.Visible = true
-					
+
 					wait(1)
-					
+
 					CashierUI.Startup.Console.One.Visible = true
 					wait(3)
 					CashierUI.Startup.Console.Two.Visible = true
@@ -306,9 +306,10 @@ for _, System in pairs(POS:GetChildren()) do
 					CashierUI.Startup.Console.Three.Visible = true
 					wait(5)
 					CashierUI.Startup.Console.Four.Visible = true
-					
+
 					wait(5)
 					
+					CashierUI.Startup.Console.Visible = false
 					CashierUI.Startup.Loading.Visible = true
 					wait(5)
 					CashierUI.Startup.Visible = false
@@ -317,10 +318,10 @@ for _, System in pairs(POS:GetChildren()) do
 			else
 				print("Skipping Startup Simulation...")
 			end
-			
+
 			CashierUI.Parent = game.StarterGui
 			CashierUI.Adornee = CashierScreen.Display
-			
+
 			for _, Plr in pairs(game.Players:GetChildren()) do
 				if Plr:IsA("Player") then
 					if not Plr.PlayerGui:FindFirstChild(CashierUI.Name) then
@@ -331,7 +332,7 @@ for _, System in pairs(POS:GetChildren()) do
 					end
 				end
 			end
-			
+
 			task.spawn(function()
 				task.wait(3)
 
@@ -354,10 +355,10 @@ for _, System in pairs(POS:GetChildren()) do
 										v.Visible = false
 									end
 								end
-								
+
 								if v.ItemLocation then
 									local c1 = v.ItemLocation:Clone()
-									
+
 									c1.Parent = Folder
 								end
 
@@ -398,11 +399,11 @@ for _, System in pairs(POS:GetChildren()) do
 
 									return
 								end
-								
+
 								Total += v.Price
 
 								local clone = script.Item:Clone()
-								
+
 								clone.Name = key
 
 								clone.Price.Text = Settings.FormatCurrency(Products[key].Price)
@@ -418,7 +419,7 @@ for _, System in pairs(POS:GetChildren()) do
 
 									APIItemScanned(Addons, Player, key, v.Price, Total)
 								end
-								
+
 								CustomerUI.Main.Total.Text = "Total: ".. Settings.FormatCurrency(Total)
 
 								task.wait(.5)
@@ -632,7 +633,7 @@ for _, System in pairs(POS:GetChildren()) do
 					Player.PlayerGui:WaitForChild(CashierUI.Name).Main.PayButtonClicked.OnServerEvent:Connect(function()
 						if Total > 0 and paying == false then
 							paying = true
-							
+
 							System.ScannerModel.ScanPart.BrickColor = BrickColor.new("Really red")
 
 							ToggleCashierStatus(Player.PlayerGui:WaitForChild(CashierUI.Name))
@@ -679,7 +680,7 @@ for _, System in pairs(POS:GetChildren()) do
 							Player.PlayerGui:WaitForChild(CashierUI.Name).Main.Pay.Visible = true
 
 							Player.PlayerGui:WaitForChild(CashierUI.Name).Main.Receipt.Visible = true
-							
+
 							if CashierScreen.Display:FindFirstChild("Error") then
 								CashierScreen.Display.Error:Play()
 							end
@@ -699,7 +700,7 @@ for _, System in pairs(POS:GetChildren()) do
 								Player.PlayerGui:WaitForChild(CashierUI.Name).Main.Logout.Visible = true
 
 								ClearItems(Folder.Name)
-								
+
 								System.ScannerModel.ScanPart.BrickColor = BrickColor.new("Black")
 							end)
 
@@ -716,7 +717,7 @@ for _, System in pairs(POS:GetChildren()) do
 								Player.PlayerGui:WaitForChild(CashierUI.Name).Main.Logout.Visible = true
 
 								ClearItems(Folder.Name)
-								
+
 								System.ScannerModel.ScanPart.BrickColor = BrickColor.new("Black")
 							end)
 						end
