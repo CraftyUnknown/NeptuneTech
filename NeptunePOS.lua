@@ -293,8 +293,12 @@ for _, System in pairs(POS:GetChildren()) do
 			if Settings.SimulateStartup == true then
 				if CashierUI:FindFirstChild("Startup") then
 					print("Simulating Startup...")
-
+					
 					CashierUI.Startup.Visible = true
+					
+					if CustomerUI:FindFirstChild("Startup") then
+						CustomerUI.Startup.Visible = true
+					end
 					
 					wait(3)
 					
@@ -322,6 +326,12 @@ for _, System in pairs(POS:GetChildren()) do
 					CashierUI.Startup.Loading.Visible = true
 					wait(5)
 					CashierUI.Startup.Visible = false
+					wait(1)
+					
+					if CustomerUI:FindFirstChild("Startup") then
+						CustomerUI.Startup.Visible = false
+					end
+					
 					wait(1)
 				end
 			else
