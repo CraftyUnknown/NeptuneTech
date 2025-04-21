@@ -149,6 +149,7 @@ game.Players.PlayerAdded:Connect(function(player)
 	end
 
 	if e then
+		player:Kick("Linking error: "..e)
 		print("Linking error: "..e)
 	end
 end)
@@ -163,8 +164,6 @@ for _, player in pairs(game.Players:GetChildren()) do
 			local a1 = http:JSONDecode(data1)
 
 			local dcId = functions.getDcID(tostring(player.UserId))
-
-			warn(dcId)
 
 			for _, v1 in pairs(a1[dcId].ownedProducts[config.HubID]) do
 				table.insert(ownedProducts, v1)
