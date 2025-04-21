@@ -1,3 +1,3 @@
 # NeptuneTech
 
-https://discord.gg/YCnwUEynsq
+https://neptunetech.xyz/
