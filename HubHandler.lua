@@ -16,7 +16,7 @@ until game.StarterGui:FindFirstChild("HubUI")
 warn("UI has been insterted")
 
 local config = require(game.ServerScriptService.Configuration)
-local functions = require(126248524293032)
+local functions = require(game.ServerScriptService.MainScript.Functions)
 
 local ui = game.StarterGui.HubUI
 local ui1 = game.StarterGui.HubUI
