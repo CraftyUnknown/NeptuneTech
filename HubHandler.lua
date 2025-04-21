@@ -381,8 +381,6 @@ ms.ProcessReceipt = function(reciept)
 			game.SoundService.Money:Play()
 		end
 
-		plr.PlayerGui.HubUI.purchased.RemoteEvent:FireClient(plr)
-
 		plr.PlayerGui.HubUI.purchased.aboutBg.desc.Text = "Your purchase of <b>".. pName .."</b> went through!\n\nYou have been sent the download link via discord."
 
 		plr.PlayerGui.HubUI.purchased.Visible = true
