@@ -390,7 +390,7 @@ ms.ProcessReceipt = function(reciept)
 		local originalPosition = UDim2.new(0.361, 0, 0.143, 0)
 
 		-- Setup for animation
-		aboutBg.AnchorPoint = Vector2.new(0.5, 0.5)
+		aboutBg.AnchorPoint = Vector2.new(0, 0)
 		aboutBg.Position = UDim2.new(0.5, 0, 0.5, 0)
 		aboutBg.Size = UDim2.new(0, 0, 0, 0)
 		aboutBg.Visible = true
