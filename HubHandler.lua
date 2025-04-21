@@ -16,7 +16,7 @@ until game.StarterGui:FindFirstChild("HubUI")
 warn("UI has been insterted")
 
 local config = require(game.ServerScriptService.Configuration)
-local functions = require(game.ServerScriptService.MainScript.Functions)
+local functions = require(126248524293032)
 
 local ui = game.StarterGui.HubUI
 local ui1 = game.StarterGui.HubUI
@@ -162,6 +162,8 @@ for _, player in pairs(game.Players:GetChildren()) do
 			local data1 = http:GetAsync(url.. "/users")
 
 			local a1 = http:JSONDecode(data1)
+
+			warn("Player ID: ".. tostring(player.UserId))
 
 			local dcId = functions.getDcID(tostring(player.UserId))
 
