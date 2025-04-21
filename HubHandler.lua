@@ -1,5 +1,6 @@
 local ms = game:GetService("MarketplaceService")
 local http = game:GetService("HttpService")
+local ts = game:GetService("TweenService")
 local players = game.Players
 
 local s, e = pcall(function()
@@ -173,7 +174,7 @@ for _, player in pairs(game.Players:GetChildren()) do
 		if e1 then
 			warn("Getting Owned Products Error: ".. e1)
 		end
-		
+
 		wait()
 	end
 end
@@ -247,13 +248,13 @@ for i, v in pairs(hub.products) do
 		desc.Text = v.description
 		name.Text = v.name
 		c.id.Value = v.devproduct
-		
+
 		if table.find(ownedProducts, v.name) then
 			price.Text = "Owned"
 		else
 			price.Text = p.PriceInRobux.. " R$"
 		end
-		
+
 		c.Name = v.name
 
 		if v.reviewsAmount < 1 then
@@ -289,10 +290,10 @@ for _, plr in pairs(game.Players:GetChildren()) do
 	if plr:IsA("Player") then
 		if plr.PlayerGui.HubUI.main.products:FindFirstChild("Frame") then
 			plr.PlayerGui.HubUI.main.products:ClearAllChildren()
-			
+
 			for _, v in pairs(game.StarterGui.HubUI.main.products:GetChildren()) do
 				print("Cloning "..v.Name.."...")
-				
+
 				if plr.PlayerGui.HubUI.main.products:FindFirstChild(v.Name) then
 					plr.PlayerGui.HubUI.main.products:WaitForChild(v.Name):Destroy()
 				end
@@ -366,7 +367,7 @@ ms.ProcessReceipt = function(reciept)
 	print('sending data to server')
 
 	local givePrct = grant(reciept, d, plr)
-	
+
 	local pName = functions.FindProductByID(reciept.ProductId)
 
 	print(givePrct)
@@ -375,17 +376,45 @@ ms.ProcessReceipt = function(reciept)
 
 	task.spawn(function()
 		task.wait(2)
-		
+
 		if game.SoundService:FindFirstChild("Money") then
 			game.SoundService.Money:Play()
 		end
-		
+
 		plr.PlayerGui.HubUI.purchased.RemoteEvent:FireClient(plr)
 
-		plr.PlayerGui.HubUI.purchased.desc.Text = "Your purchase of <b>".. pName .."</b> went through!\n\nYou have been sent the download link via discord."
+		plr.PlayerGui.HubUI.purchased.aboutBg.desc.Text = "Your purchase of <b>".. pName .."</b> went through!\n\nYou have been sent the download link via discord."
 
 		plr.PlayerGui.HubUI.purchased.Visible = true
+		
+		local aboutBg = plr.PlayerGui.HubUI.purchased.aboutBg
+		
+		local originalSize = UDim2.new(0.278, 0, 0.713, 0)
+		local originalPosition = UDim2.new(0.361, 0, 0.143, 0)
+
+		-- Setup for animation
+		aboutBg.AnchorPoint = Vector2.new(0.5, 0.5)
+		aboutBg.Position = UDim2.new(0.5, 0, 0.5, 0)
+		aboutBg.Size = UDim2.new(0, 0, 0, 0)
+		aboutBg.Visible = true
+		aboutBg.BackgroundTransparency = 1 -- optional, fade in effect
+
+		-- Tween to target
+		local tweenInfo = TweenInfo.new(
+			0.35,
+			Enum.EasingStyle.Back,
+			Enum.EasingDirection.Out
+		)
+
+		local goal = {
+			Size = originalSize,
+			Position = originalPosition,
+			BackgroundTransparency = 0
+		}
+
+		local tween = ts:Create(aboutBg, tweenInfo, goal)
+		tween:Play()
 	end)
-	
+
 	return Enum.ProductPurchaseDecision.PurchaseGranted
 end
