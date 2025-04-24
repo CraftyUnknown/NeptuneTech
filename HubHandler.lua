@@ -28,7 +28,7 @@ local side = ui.side
 local img = side.player
 local plrname = side.user
 local hId = mainFrame.id
-local aboutLabel = ui.home.about
+local aboutLabel = ui.about.about
 
 local linkFrame = ui.link
 local codeLabel = linkFrame.code
@@ -54,7 +54,18 @@ end
 
 function setAbout(text) 
 	for _, v in pairs(game.Players:GetChildren()) do
-		v.PlayerGui.HubUI.home.about.Text = text
+		v.PlayerGui.HubUI.about.about.Text = text
+	end
+end
+
+function updateStats(hub) 
+	for _, v in pairs(game.Players:GetChildren()) do
+		if v.PlayerGui.HubUI.home.ownedProducts then
+			v.PlayerGui.HubUI.home.ownedProducts.Text = #ownedProducts
+			v.PlayerGui.HubUI.home.totalProducts.Text = #hub.products
+			v.PlayerGui.HubUI.home.totalSales.Text = hub.totalSales
+			v.PlayerGui.HubUI.home.dcname.Text = "<b>".. functions.getDcName(tostring(v.UserId)) .."</b>\n(".. functions.getDcID(tostring(v.UserId)).. ")"
+		end
 	end
 end
 
@@ -196,6 +207,7 @@ setGroupName(hubName)
 
 aboutLabel.Text = hub.about
 setAbout(hub.about)
+updateStats(hub)
 
 local groupIcon = getGroupIcon(hub.groupID)
 
