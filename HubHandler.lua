@@ -148,7 +148,7 @@ game.Players.PlayerAdded:Connect(function(player)
 		if linkedString == "false" or linkedString == false then
 			ui.link.Visible = true
 			local code = random_string(6)
-			ui.link.code.Text = "/link <b>"..code.."</b>"
+			ui.link.code.Text = "/link "..code
 			functions.createLinkCode(player.Name, player.UserId, code)
 		else
 			linkFrame.Visible = false
