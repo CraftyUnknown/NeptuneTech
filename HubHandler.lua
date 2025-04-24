@@ -234,7 +234,8 @@ print("Products: ", hub.products)
 wait(.5)
 
 for i, v in pairs(hub.products) do
-	local success, err = pcall(function()
+	task.spawn(function()
+			local success, err = pcall(function()
 		local c = format:Clone()
 		local desc = c.productDescription
 		local name = c.productName
@@ -281,7 +282,7 @@ for i, v in pairs(hub.products) do
 
 		ui.side.groupName.group.Image = getGroupIcon(hub.groupID)
 
-		wait()
+		task.wait()
 	end)
 
 	if success then
@@ -291,6 +292,7 @@ for i, v in pairs(hub.products) do
 	if err then
 		print("Error while listing product; ", err)
 	end
+	end)
 end
 
 print("Done!")
