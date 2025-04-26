@@ -43,6 +43,7 @@ local ReplicatedFirst = game:GetService("ReplicatedFirst")
 ReplicatedFirst:RemoveDefaultLoadingScreen()
 
 local ownedProducts = {}
+local productCount = 0
 
 wait()
 
@@ -62,7 +63,7 @@ function updateStats(hub)
 	for _, v in pairs(game.Players:GetChildren()) do
 		if v.PlayerGui.HubUI.home.ownedProducts then
 			v.PlayerGui.HubUI.home.ownedProducts.Text = #ownedProducts
-			v.PlayerGui.HubUI.home.totalProducts.Text = #hub.products
+			v.PlayerGui.HubUI.home.totalProducts.Text = productCount
 			v.PlayerGui.HubUI.home.totalSales.Text = hub.totalSales
 			v.PlayerGui.HubUI.home.dcname.Text = "<b>".. functions.getDcName(tostring(v.UserId)) .."</b>\n(".. functions.getDcID(tostring(v.UserId)).. ")"
 		end
@@ -207,7 +208,6 @@ setGroupName(hubName)
 
 aboutLabel.Text = hub.about
 setAbout(hub.about)
-updateStats(hub)
 
 local groupIcon = getGroupIcon(hub.groupID)
 
@@ -236,6 +236,8 @@ wait(.5)
 for i, v in pairs(hub.products) do
 	task.spawn(function()
 		local success, err = pcall(function()
+			productCount += 1
+					
 			local c = format:Clone()
 			local desc = c.productDescription
 			local name = c.productName
@@ -301,6 +303,8 @@ for i, v in pairs(hub.products) do
 		end
 	end)
 end
+
+updateStats(hub)
 
 print("Done!")
 
