@@ -300,8 +300,6 @@ end
 
 print("Done!")
 
-ui.main.products.Frame:Destroy()
-
 for _, plr in pairs(game.Players:GetChildren()) do
 	if plr:IsA("Player") then
 		if plr.PlayerGui.HubUI.main.products:FindFirstChild("Frame") then
@@ -321,6 +319,8 @@ for _, plr in pairs(game.Players:GetChildren()) do
 		end
 	end
 end
+
+ui.main.products.Frame:Destroy()
 
 game.ReplicatedStorage.Loaded.Value = true
 
