@@ -279,6 +279,7 @@ for i, v in pairs(hub.products) do
 			
 			for _, plr in pairs(game.Players:GetChildren()) do
 				if plr:IsA("Player") then
+					plr.PlayerGui.HubUI.main.products.Frame:Destroy()
 					c:Clone().Parent = plr.PlayerGui.HubUI.main.products
 				end
 			end
