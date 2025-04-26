@@ -276,10 +276,13 @@ for i, v in pairs(hub.products) do
 			else
 				reviews.Text = v.reviewsTotal/v.reviewsAmount .."/5 ⭐"
 			end
-			
+
 			for _, plr in pairs(game.Players:GetChildren()) do
 				if plr:IsA("Player") then
-					plr.PlayerGui.HubUI.main.products.Frame:Destroy()
+					if plr.PlayerGui.HubUI.main.products:FindFirstChild("Frame") then
+						plr.PlayerGui.HubUI.main.products.Frame:Destroy()
+					end
+					
 					c:Clone().Parent = plr.PlayerGui.HubUI.main.products
 				end
 			end
