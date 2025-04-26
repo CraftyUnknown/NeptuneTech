@@ -334,9 +334,9 @@ end
 
 function grant(reciept, d, plr)
 	local success, err = pcall(function()
-		print("plr: ", reciept.PlayerId)
+		local plr = game.Players:GetPlayerByUserId(reciept.PlayerId)
 
-		local pName = functions.FindProductByID(reciept.ProductId)
+		local pName = functions.FindProductByID(plr, reciept.ProductId)
 
 		local Data = {
 			["username"] = plr.Name,
@@ -386,7 +386,7 @@ ms.ProcessReceipt = function(reciept)
 
 	local givePrct = grant(reciept, d, plr)
 
-	local pName = functions.FindProductByID(reciept.ProductId)
+	local pName = functions.FindProductByID(plr, reciept.ProductId)
 
 	print(givePrct)
 
