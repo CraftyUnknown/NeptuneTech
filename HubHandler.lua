@@ -235,69 +235,70 @@ wait(.5)
 
 for i, v in pairs(hub.products) do
 	task.spawn(function()
-			local success, err = pcall(function()
-		local c = format:Clone()
-		local desc = c.productDescription
-		local name = c.productName
-		local price = c.b.productPrice
-		local image = c.image
-		local reviews = c.reviews
-		local convImg = 0
+		local success, err = pcall(function()
+			local c = format:Clone()
+			local desc = c.productDescription
+			local name = c.productName
+			local price = c.b.productPrice
+			local image = c.image
+			local reviews = c.reviews
+			local convImg = 0
 
-		if tonumber(v.image_id) > 0 then
-			local imgSucess, imgErr = pcall(function()
-				convImg = http:GetAsync("https://rbxdecal.glitch.me/".. v.image_id)
-				image.Image = "rbxassetid://".. convImg
-			end)
+			if tonumber(v.image_id) > 0 then
+				local imgSucess, imgErr = pcall(function()
+					convImg = http:GetAsync("https://rbxdecal.glitch.me/".. v.image_id)
+					image.Image = "rbxassetid://".. convImg
+				end)
 
-			if imgErr then
-				warn("Error while converting image: ".. imgErr)
+				if imgErr then
+					warn("Error while converting image: ".. imgErr)
 
-				image.Image = "rbxassetid://"..v.image_id
+					image.Image = "rbxassetid://"..v.image_id
+				end
 			end
+
+			local p = ms:GetProductInfo(v.devproduct, Enum.InfoType.Product)
+
+			desc.Text = v.description
+			name.Text = v.name
+			c.id.Value = v.devproduct
+
+			if table.find(ownedProducts, v.name) then
+				price.Text = "Owned"
+			else
+				price.Text = p.PriceInRobux.. " R$"
+			end
+
+			c.Name = v.name
+
+			if v.reviewsAmount < 1 then
+				reviews.Text = "(no reviews yet)"
+			else
+				reviews.Text = v.reviewsTotal/v.reviewsAmount .."/5 ⭐"
+			end
+			
+			for _, plr in pairs(game.Players:GetChildren()) do
+				if plr:IsA("Player") then
+					c:Clone().Parent = plr.PlayerGui.HubUI.main.products
+				end
+			end
+
+			ui.side.groupName.group.Image = getGroupIcon(hub.groupID)
+
+			task.wait()
+		end)
+
+		if success then
+			print("Successfully added product ", v.name)
 		end
 
-		local p = ms:GetProductInfo(v.devproduct, Enum.InfoType.Product)
-
-		desc.Text = v.description
-		name.Text = v.name
-		c.id.Value = v.devproduct
-
-		if table.find(ownedProducts, v.name) then
-			price.Text = "Owned"
-		else
-			price.Text = p.PriceInRobux.. " R$"
+		if err then
+			print("Error while listing product; ", err)
 		end
-
-		c.Name = v.name
-
-		if v.reviewsAmount < 1 then
-			reviews.Text = "(no reviews yet)"
-		else
-			reviews.Text = v.reviewsTotal/v.reviewsAmount .."/5 ⭐"
-		end
-
-		c.Parent = ui.main.products
-		c:Clone().Parent = ui1.main.products
-
-		ui.side.groupName.group.Image = getGroupIcon(hub.groupID)
-
-		task.wait()
-	end)
-
-	if success then
-		print("Successfully added product ", v.name)
-	end
-
-	if err then
-		print("Error while listing product; ", err)
-	end
 	end)
 end
 
 print("Done!")
-
-game.ReplicatedStorage.Loaded.Value = true
 
 ui.main.products.Frame:Destroy()
 
@@ -306,7 +307,7 @@ for _, plr in pairs(game.Players:GetChildren()) do
 		if plr.PlayerGui.HubUI.main.products:FindFirstChild("Frame") then
 			plr.PlayerGui.HubUI.main.products:ClearAllChildren()
 
-			for _, v in pairs(game.StarterGui.HubUI.main.products:GetChildren()) do
+			for _, v in pairs(ui.main.products:GetChildren()) do
 				print("Cloning "..v.Name.."...")
 
 				if plr.PlayerGui.HubUI.main.products:FindFirstChild(v.Name) then
@@ -320,6 +321,8 @@ for _, plr in pairs(game.Players:GetChildren()) do
 		end
 	end
 end
+
+game.ReplicatedStorage.Loaded.Value = true
 
 local function onPromptPurchaseFinished(player, assetId, isPurchased)
 	if isPurchased then
@@ -399,9 +402,9 @@ ms.ProcessReceipt = function(reciept)
 		plr.PlayerGui.HubUI.purchased.aboutBg.desc.Text = "Your purchase of <b>".. pName .."</b> went through!\n\nYou have been sent the download link via discord."
 
 		plr.PlayerGui.HubUI.purchased.Visible = true
-		
+
 		local aboutBg = plr.PlayerGui.HubUI.purchased.aboutBg
-		
+
 		local originalSize = UDim2.new(0.278, 0, 0.713, 0)
 		local originalPosition = UDim2.new(0.361, 0, 0.143, 0)
 
