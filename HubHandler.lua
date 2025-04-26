@@ -322,8 +322,6 @@ end
 
 ui.main.products.Frame:Destroy()
 
-game.ReplicatedStorage.Loaded.Value = true
-
 local function onPromptPurchaseFinished(player, assetId, isPurchased)
 	if isPurchased then
 		print(player.Name, "bought an item with AssetID:", assetId)
