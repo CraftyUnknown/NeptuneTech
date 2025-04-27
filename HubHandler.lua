@@ -30,6 +30,8 @@ local plrname = side.user
 local hId = mainFrame.id
 local aboutLabel = ui.about.about
 
+local gridCopy = ui.main.products:WaitForChild("UIGridLayout"):Clone()
+
 local linkFrame = ui.link
 local codeLabel = linkFrame.code
 
@@ -285,6 +287,10 @@ for i, v in pairs(hub.products) do
 				if plr:IsA("Player") then
 					if plr.PlayerGui.HubUI.main.products:FindFirstChild("Frame") then
 						plr.PlayerGui.HubUI.main.products.Frame:Destroy()
+					end
+					
+					if not plr.PlayerGui.HubUI.main.products:FindFirstChild("UIGridLayout") then
+						gridCopy.Parent = plr.PlayerGui.HubUI.main.products
 					end
 
 					c:Clone().Parent = plr.PlayerGui.HubUI.main.products
