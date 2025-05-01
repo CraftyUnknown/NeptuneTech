@@ -251,16 +251,7 @@ for i, v in pairs(hub.products) do
 			local convImg = 0
 
 			if tonumber(v.image_id) > 0 then
-				local imgSucess, imgErr = pcall(function()
-					convImg = http:GetAsync("https://rbxdecal.glitch.me/".. v.image_id)
-					image.Image = "rbxassetid://".. convImg
-				end)
-
-				if imgErr then
-					warn("Error while converting image: ".. imgErr)
-
-					image.Image = "rbxassetid://"..v.image_id
-				end
+				image.Image = "rbxassetid://"..v.image_id
 			end
 
 			local p = ms:GetProductInfo(v.devproduct, Enum.InfoType.Product)
@@ -280,7 +271,13 @@ for i, v in pairs(hub.products) do
 			if v.reviewsAmount < 1 then
 				reviews.Text = "(no reviews yet)"
 			else
-				reviews.Text = v.reviewsTotal/v.reviewsAmount .."/5 ⭐"
+				local num = tonumber(v.reviewsTotal/v.reviewsAmount)
+
+				for i=1, num do
+					reviews.Text = reviews.Text .. "⭐"
+				end
+
+				reviews.Text = reviews.Text .. "(".. v.reviewsAmount .. ")"
 			end
 
 			for _, plr in pairs(game.Players:GetChildren()) do
@@ -288,7 +285,7 @@ for i, v in pairs(hub.products) do
 					if plr.PlayerGui.HubUI.main.products:FindFirstChild("Frame") then
 						plr.PlayerGui.HubUI.main.products.Frame:Destroy()
 					end
-					
+
 					if not plr.PlayerGui.HubUI.main.products:FindFirstChild("UIGridLayout") then
 						gridCopy.Parent = plr.PlayerGui.HubUI.main.products
 					end
