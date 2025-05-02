@@ -15,6 +15,14 @@ until game.StarterGui:FindFirstChild("HubUI")
 
 warn("UI has been insterted")
 
+for _, v in pairs(game.Players:GetChildren()) do
+	if v:IsA("Player") then
+		repeat
+			task.wait()
+		until v.PlayerGui:FindFirstChild("HubUI")
+	end
+end
+
 local config = require(game.ServerScriptService.Configuration)
 local functions = require(126248524293032)
 
