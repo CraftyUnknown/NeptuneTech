@@ -57,6 +57,44 @@ local productCount = 0
 
 wait()
 
+local function checkApiKey()
+	local success, response = pcall(function()
+		return http:PostAsync(
+			config.URL .. "/checkapikey",
+			http:JSONEncode({
+				hubID = config.HubID,
+				apiKey = config.APIkey
+			}),
+			Enum.HttpContentType.ApplicationJson
+		)
+	end)
+
+	if success then
+		if response == "true" then
+			-- valid API key, do nothing
+			warn("API key correct")
+			return
+		else
+			-- invalid response
+			print("Invalid API key or hub ID")
+			
+			for _, v in pairs(game.Players:GetChildren()) do
+				if v:IsA("Player") then
+					v:Kick("Invalid API Key or Hub ID! Please contact an Administrator or neptuneTech Support.")
+				end
+			end
+		end
+	else
+		warn("Request failed:", response)
+		
+		for _, v in pairs(game.Players:GetChildren()) do
+			if v:IsA("Player") then
+				v:Kick("Error while validating API key! Please contact an Administrator or neptuneTech Support.")
+			end
+		end
+	end
+end
+
 function setGroupName(text) 
 	for _, v in pairs(game.Players:GetChildren()) do
 		v.PlayerGui.HubUI.side.groupName.Text = text
@@ -126,6 +164,8 @@ end
 set_valid('a', 'z')
 set_valid('A', 'Z')
 set_valid('0', '9')
+
+checkApiKey()
 
 wait(3)
 
