@@ -77,7 +77,7 @@ local function checkApiKey()
 		else
 			-- invalid response
 			print("Invalid API key or hub ID")
-			
+
 			for _, v in pairs(game.Players:GetChildren()) do
 				if v:IsA("Player") then
 					v:Kick("Invalid API Key or Hub ID! Please contact an Administrator or neptuneTech Support.")
@@ -86,7 +86,7 @@ local function checkApiKey()
 		end
 	else
 		warn("Request failed:", response)
-		
+
 		for _, v in pairs(game.Players:GetChildren()) do
 			if v:IsA("Player") then
 				v:Kick("Error while validating API key! Please contact an Administrator or neptuneTech Support.")
@@ -109,14 +109,31 @@ end
 
 function updateStats(hub) 
 	for _, v in pairs(game.Players:GetChildren()) do
-		if v.PlayerGui.HubUI.home.ownedProducts then
-			v.PlayerGui.HubUI.home.ownedProducts.Text = #ownedProducts
-			v.PlayerGui.HubUI.home.totalProducts.Text = productCount
-			v.PlayerGui.HubUI.home.totalSales.Text = hub.totalSales
-			v.PlayerGui.HubUI.home.dcname.Text = "<b>".. functions.getDcName(tostring(v.UserId)) .."</b>\n(".. functions.getDcID(tostring(v.UserId)).. ")"
+		if v:FindFirstChild("PlayerGui") and 
+			v.PlayerGui:FindFirstChild("HubUI") and 
+			v.PlayerGui.HubUI:FindFirstChild("home") and 
+			v.PlayerGui.HubUI.home:FindFirstChild("ownedProducts") then
+
+			local home = v.PlayerGui.HubUI.home
+
+			home.ownedProducts.Text = #ownedProducts
+			home.totalProducts.Text = productCount
+			home.totalSales.Text = hub.totalSales
+
+			local dcName = "Unable to get name"
+			local success, result = pcall(function()
+				return functions.getDcName(tostring(v.UserId))
+			end)
+
+			if success then
+				dcName = result
+			end
+
+			home.dcname.Text = "<b>".. dcName .."</b>\n(".. functions.getDcID(tostring(v.UserId)) .. ")"
 		end
 	end
 end
+
 
 function getGroupIcon(id)
 	local res
