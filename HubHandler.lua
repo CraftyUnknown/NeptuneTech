@@ -167,7 +167,7 @@ end
 
 function testConnection()
 	local s, e = pcall(function()
-		http:GetAsync(url)
+		return http:GetAsync(url)
 	end)
 
 	if s then
