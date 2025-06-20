@@ -166,14 +166,19 @@ local function random_string(length)
 end
 
 function testConnection()
-	local s, e = pcall(function()
+	local success, response = pcall(function()
 		return http:GetAsync(url)
 	end)
 
-	if s then
+	if success and response and response ~= "" then
 		return true
 	else
-		print(e)
+		warn("Connection failed:", response)
+		for _, v in pairs(game.Players:GetChildren()) do
+			if v:IsA("Player") then
+				v:Kick("Seems like nHub Servers are down! Please contact neptuneTech Support if you think that there has been an error.")
+			end
+		end
 		return false
 	end
 end
@@ -305,63 +310,65 @@ wait(.5)
 for i, v in pairs(hub.products) do
 	task.spawn(function()
 		local success, err = pcall(function()
-			productCount += 1
+			if not v.offsale or v.offsale == false or v.offsale == "false" then
+				productCount += 1
 
-			local c = format:Clone()
-			local desc = c.productDescription
-			local name = c.productName
-			local price = c.b.productPrice
-			local image = c.image
-			local reviews = c.reviews
-			local convImg = 0
+				local c = format:Clone()
+				local desc = c.productDescription
+				local name = c.productName
+				local price = c.b.productPrice
+				local image = c.image
+				local reviews = c.reviews
+				local convImg = 0
 
-			if tonumber(v.image_id) > 0 then
-				image.Image = "rbxassetid://"..v.image_id
-			end
-
-			local p = ms:GetProductInfo(v.devproduct, Enum.InfoType.Product)
-
-			desc.Text = v.description
-			name.Text = v.name
-			c.id.Value = v.devproduct
-
-			if table.find(ownedProducts, v.name) then
-				price.Text = "Owned"
-			else
-				price.Text = p.PriceInRobux.. " R$"
-			end
-
-			c.Name = v.name
-
-			if v.reviewsAmount < 1 then
-				reviews.Text = "(no reviews yet)"
-			else
-				local num = tonumber(v.reviewsTotal/v.reviewsAmount)
-
-				for i=1, num do
-					reviews.Text = reviews.Text .. "⭐"
+				if tonumber(v.image_id) > 0 then
+					image.Image = "rbxassetid://"..v.image_id
 				end
 
-				reviews.Text = reviews.Text .. "(".. v.reviewsAmount .. ")"
-			end
+				local p = ms:GetProductInfo(v.devproduct, Enum.InfoType.Product)
 
-			for _, plr in pairs(game.Players:GetChildren()) do
-				if plr:IsA("Player") then
-					if plr.PlayerGui.HubUI.main.products:FindFirstChild("Frame") then
-						plr.PlayerGui.HubUI.main.products.Frame:Destroy()
-					end
+				desc.Text = v.description
+				name.Text = v.name
+				c.id.Value = v.devproduct
 
-					if not plr.PlayerGui.HubUI.main.products:FindFirstChild("UIGridLayout") then
-						gridCopy.Parent = plr.PlayerGui.HubUI.main.products
-					end
-
-					c:Clone().Parent = plr.PlayerGui.HubUI.main.products
+				if table.find(ownedProducts, v.name) then
+					price.Text = "Owned"
+				else
+					price.Text = p.PriceInRobux.. " R$"
 				end
+
+				c.Name = v.name
+
+				if v.reviewsAmount < 1 then
+					reviews.Text = "(no reviews yet)"
+				else
+					local num = tonumber(v.reviewsTotal/v.reviewsAmount)
+
+					for i=1, num do
+						reviews.Text = reviews.Text .. "⭐"
+					end
+
+					reviews.Text = reviews.Text .. "(".. v.reviewsAmount .. ")"
+				end
+
+				for _, plr in pairs(game.Players:GetChildren()) do
+					if plr:IsA("Player") then
+						if plr.PlayerGui.HubUI.main.products:FindFirstChild("Frame") then
+							plr.PlayerGui.HubUI.main.products.Frame:Destroy()
+						end
+
+						if not plr.PlayerGui.HubUI.main.products:FindFirstChild("UIGridLayout") then
+							gridCopy.Parent = plr.PlayerGui.HubUI.main.products
+						end
+
+						c:Clone().Parent = plr.PlayerGui.HubUI.main.products
+					end
+				end
+
+				ui.side.groupName.group.Image = getGroupIcon(hub.groupID)
+
+				task.wait()
 			end
-
-			ui.side.groupName.group.Image = getGroupIcon(hub.groupID)
-
-			task.wait()
 		end)
 
 		if success then
