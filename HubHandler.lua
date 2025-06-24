@@ -342,13 +342,21 @@ for i, v in pairs(hub.products) do
 				if v.reviewsAmount < 1 then
 					reviews.Text = "(no reviews yet)"
 				else
-					local num = tonumber(v.reviewsTotal/v.reviewsAmount)
+					local num = math.floor(tonumber(v.reviewsTotal / v.reviewsAmount))
+					local totalStars = 5
 
-					for i=1, num do
-						reviews.Text = reviews.Text .. "⭐"
+					reviews.RichText = true
+					reviews.Text = ""
+
+					for i = 1, num do
+						reviews.Text = reviews.Text .. '<font color="#FFD700" size="20">⭐</font>'
 					end
 
-					reviews.Text = reviews.Text .. "(".. v.reviewsAmount .. ")"
+					for i = num + 1, totalStars do
+						reviews.Text = reviews.Text .. '<font color="#AAAAAA" size="27">☆</font>'
+					end
+
+					reviews.Text = reviews.Text .. '<font color="#AAAAAA" size="20"> (' .. v.reviewsAmount .. ')</font>'
 				end
 
 				for _, plr in pairs(game.Players:GetChildren()) do
