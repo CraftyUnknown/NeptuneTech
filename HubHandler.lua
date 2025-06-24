@@ -340,7 +340,7 @@ for i, v in pairs(hub.products) do
 				c.Name = v.name
 
 				if v.reviewsAmount < 1 then
-					reviews.Text = "(no reviews yet)"
+					reviews.Text = '<font color="#AAAAAA" size="27">(no reviews yet)</font>'
 				else
 					local num = math.floor(tonumber(v.reviewsTotal / v.reviewsAmount))
 					local totalStars = 5
