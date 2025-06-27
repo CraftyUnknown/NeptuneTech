@@ -3,10 +3,23 @@ local http = game:GetService("HttpService")
 local ts = game:GetService("TweenService")
 local players = game.Players
 
+local config = require(game.ServerScriptService.Configuration)
+
 local s, e = pcall(function()
 	warn("Requesting UI...")
 	local UILoader = require(129619868289742)
-	UILoader.load()
+	
+	if config.Theme then
+		if config.Theme == "round" then
+			UILoader.load()
+		elseif config.Theme == "flat" then
+			UILoader.loadNoRound()
+		else
+			UILoader.loadNoRound()
+		end
+	else
+		UILoader.loadNoRound()
+	end
 end)
 
 repeat
@@ -23,7 +36,6 @@ for _, v in pairs(game.Players:GetChildren()) do
 	end
 end
 
-local config = require(game.ServerScriptService.Configuration)
 local functions = require(126248524293032)
 
 local ui = game.StarterGui.HubUI
