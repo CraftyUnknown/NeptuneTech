@@ -5,7 +5,7 @@ local players = game.Players
 
 local config = require(game.ServerScriptService.Configuration)
 
-local s, e = pcall(function()
+local s, loadingErr = pcall(function()
 	warn("Requesting UI...")
 	local UILoader = require(129619868289742)
 	
@@ -15,12 +15,16 @@ local s, e = pcall(function()
 		elseif config.Theme == "flat" then
 			UILoader.loadNoRound()
 		else
-			UILoader.loadNoRound()
+			UILoader.load()
 		end
 	else
-		UILoader.loadNoRound()
+		UILoader.load()
 	end
 end)
+
+if loadingErr then
+	warn("Failed to load UI: " .. loadingErr)
+end
 
 repeat
 	task.wait()
