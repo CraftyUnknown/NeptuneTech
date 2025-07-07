@@ -8,7 +8,7 @@ local config = require(game.ServerScriptService.Configuration)
 local s, loadingErr = pcall(function()
 	warn("Requesting UI...")
 	local UILoader = require(129619868289742)
-	
+
 	if config.Theme then
 		if config.Theme == "round" then
 			UILoader.load()
@@ -244,13 +244,13 @@ for _, player in pairs(game.Players:GetChildren()) do
 
 		wait(.5)
 
-		local data = http:GetAsync(url.. "/servers")
+		local data = http:GetAsync(url.. "/getserver?id="..config.HubID)
 
 		local a = http:JSONDecode(data)
 
 		ui = player.PlayerGui.HubUI
 
-		if not a[config.HubID] then
+		if not a then
 			player:Kick("Unable to load hub: Hub ID incorrect! Please contact an administrator if this keeps happening.")
 		end
 
