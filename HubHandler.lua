@@ -244,13 +244,13 @@ for _, player in pairs(game.Players:GetChildren()) do
 
 		wait(.5)
 
-		local data = http:GetAsync(url.. "/getserver?id="..config.HubID)
+		local data = http:GetAsync(url.. "/servers")
 
 		local a = http:JSONDecode(data)
 
 		ui = player.PlayerGui.HubUI
 
-		if not a then
+		if not a[config.HubID] then
 			player:Kick("Unable to load hub: Hub ID incorrect! Please contact an administrator if this keeps happening.")
 		end
 
@@ -455,6 +455,7 @@ function grant(reciept, d, plr)
 			["hubID"] = config.HubID,
 			["apiKey"] = config.APIkey,
 			["dcName"] = d["".. reciept.PlayerId .. ""].discordId,
+			["purchaseID"] = reciept.PurchaseId 
 		}
 
 		print("Player Data: ", Data)
