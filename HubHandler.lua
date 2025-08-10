@@ -284,11 +284,29 @@ end
 
 local hub = functions.GetHub(config.HubID)
 
-if hub == false then for _, v in pairs(game.Players:GetChildren()) do v:Kick("Hub has not been set up yet. Please contact owner.") end end
+if hub == false or not hub then for _, v in pairs(game.Players:GetChildren()) do v:Kick("Hub has not been set up yet. Please contact owner.") end end
 
 local hubName = hub.name
 local groupId = hub.groupID
 local hubID = config.HubID
+
+pcall(function()
+	local ownerid = hub.ownerId
+
+	if (tonumber(ownerid)) then
+		local data1 = http:GetAsync(url.. "/users")
+
+		local a1 = http:JSONDecode(data1)
+
+		local owner = a1[ownerid]
+
+		if owner then
+			if owner.banned and owner.banned == true then
+				for _, v in pairs(game.Players:GetChildren()) do v:Kick("Group owner is banned from using nHub.") end
+			end
+		end
+	end
+end)
 
 ui.home.id.Text = "Hub ID: ".. hubID
 ui.main.id.Text = "Hub ID: ".. hubID
