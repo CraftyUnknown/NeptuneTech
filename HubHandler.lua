@@ -211,6 +211,8 @@ for _, player in pairs(game.Players:GetChildren()) do
 	if player:IsA("Player") then
 		local s1, e1 = pcall(function()
 			local data1 = http:GetAsync(url.. "/users")
+			
+			repeat task.wait() until data1
 
 			local a1 = http:JSONDecode(data1)
 
@@ -245,6 +247,8 @@ for _, player in pairs(game.Players:GetChildren()) do
 		wait(.5)
 
 		local data = http:GetAsync(url.. "/servers")
+		
+		repeat task.wait() until data
 
 		local a = http:JSONDecode(data)
 
@@ -295,6 +299,8 @@ pcall(function()
 
 	if (tonumber(ownerid)) then
 		local data1 = http:GetAsync(url.. "/users")
+		
+		repeat task.wait() until data1
 
 		local a1 = http:JSONDecode(data1)
 
@@ -496,7 +502,12 @@ ms.ProcessReceipt = function(reciept)
 	local plr = game.Players:GetPlayerByUserId(reciept.PlayerId)
 
 	local d = http:JSONDecode(http:GetAsync(url.. "/robloxusers"))
+	
+	repeat task.wait() until d
+	
 	local d1 = http:JSONDecode(http:GetAsync(url.. "/users"))
+	
+	repeat task.wait() until d1
 
 	print("Users: ", d)
 
