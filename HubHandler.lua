@@ -288,6 +288,10 @@ end
 
 local hub = functions.GetHub(config.HubID)
 
+repeat
+	task.wait()
+until hub
+
 if hub == false or not hub then for _, v in pairs(game.Players:GetChildren()) do v:Kick("Hub has not been set up yet. Please contact owner.") end end
 
 local hubName = hub.name
@@ -374,7 +378,11 @@ for i, v in pairs(hub.products) do
 				if table.find(ownedProducts, v.name) then
 					price.Text = "Owned"
 				else
-					price.Text = p.PriceInRobux.. " R$"
+					if v.stock < 0 then
+						price.Text = p.PriceInRobux.. " R$ - Stock: ∞"
+					else
+						price.Text = p.PriceInRobux.. " R$ - Stock: ".. (v.stock or "∞")
+					end
 				end
 
 				c.Name = v.name
