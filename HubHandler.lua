@@ -210,17 +210,14 @@ wait(3)
 for _, player in pairs(game.Players:GetChildren()) do
 	if player:IsA("Player") then
 		local s1, e1 = pcall(function()
-			local data1 = http:GetAsync(url.. "/users")
-			
-			repeat task.wait() until data1
-
+			local data1 = http:GetAsync(url.. "/public/users/get?roblox_id=".. tostring(player.UserId))
 			local a1 = http:JSONDecode(data1)
 
 			warn("Player ID: ".. tostring(player.UserId))
 
 			local dcId = functions.getDcID(tostring(player.UserId))
 
-			for _, v1 in pairs(a1[dcId].ownedProducts[config.HubID]) do
+			for _, v1 in pairs(a1.data.ownedProducts[config.HubID]) do
 				table.insert(ownedProducts, v1)
 			end
 		end)
@@ -246,15 +243,12 @@ for _, player in pairs(game.Players:GetChildren()) do
 
 		wait(.5)
 
-		local data = http:GetAsync(url.. "/servers")
-		
-		repeat task.wait() until data
-
-		local a = http:JSONDecode(data)
+		local data = http:GetAsync(url.. "/public/hubs/info?id="..config.HubID)
+		data = http:JSONDecode(data)
 
 		ui = player.PlayerGui.HubUI
 
-		if not a[config.HubID] then
+		if data.success == false then
 			player:Kick("Unable to load hub: Hub ID incorrect! Please contact an administrator if this keeps happening.")
 		end
 
@@ -302,17 +296,14 @@ pcall(function()
 	local ownerid = hub.ownerId
 
 	if (tonumber(ownerid)) then
-		local data1 = http:GetAsync(url.. "/users")
-		
-		repeat task.wait() until data1
-
+		local data1 = http:GetAsync(url.. "/public/users/get?discord_id=".. ownerid)
 		local a1 = http:JSONDecode(data1)
 
 		local owner = a1[ownerid]
 
 		if owner then
-			if owner.banned and owner.banned == true then
-				for _, v in pairs(game.Players:GetChildren()) do v:Kick("Group owner is banned from using nHub.") end
+			if owner.data.banned and owner.data.banned == true or owner.data.banned == "true" then
+				for _, v in pairs(game.Players:GetChildren()) do v:Kick("Hub owner is banned from using nHub.") end
 			end
 		end
 	end
@@ -473,111 +464,106 @@ local function onPromptPurchaseFinished(player, assetId, isPurchased)
 	end
 end
 
-function grant(reciept, d, plr)
-	local success, err = pcall(function()
-		local plr = game.Players:GetPlayerByUserId(reciept.PlayerId)
+function grant(receipt, discordId, plr)
+	local plr = game.Players:GetPlayerByUserId(receipt.PlayerId)
 
-		local pName = functions.FindProductByID(plr, reciept.ProductId)
+	local pName = functions.FindProductByID(plr, receipt.ProductId)
 
-		local Data = {
-			["username"] = plr.Name,
-			["userID"] = reciept.PlayerId,
-			["productName"] = pName,
-			["devProductID"] = reciept.ProductId,
-			["hubID"] = config.HubID,
-			["apiKey"] = config.APIkey,
-			["dcName"] = d["".. reciept.PlayerId .. ""].discordId,
-			["purchaseID"] = reciept.PurchaseId 
-		}
+	local Data = {
+		["username"] = plr.Name,
+		["userID"] = receipt.PlayerId,
+		["productName"] = pName,
+		["devProductID"] = receipt.ProductId,
+		["hubID"] = config.HubID,
+		["apiKey"] = config.APIkey,
+		["dcName"] = discordId,
+		["purchaseID"] = receipt.PurchaseId 
+	}
 
-		print("Player Data: ", Data)
+	Data = http:JSONEncode(Data)
 
-		Data = http:JSONEncode(Data)
+	local res = http:PostAsync(url.. "/giveproduct", Data)
+	local resData = http:JSONDecode(res)
 
-		local res = http:PostAsync(url.. "/giveproduct", Data)
-
-		print(res)
-
-		return res
-	end)
-
-	if err then
-		print(err)
-	end
+	return resData.success, (resData.message or "-")
 end
 
-ms.ProcessReceipt = function(reciept)
-	local plr = game.Players:GetPlayerByUserId(reciept.PlayerId)
+ms.ProcessReceipt = function(receipt)
+	local plr = game.Players:GetPlayerByUserId(receipt.PlayerId)
 
-	local d = http:JSONDecode(http:GetAsync(url.. "/robloxusers"))
-	
-	repeat task.wait() until d
-	
-	local d1 = http:JSONDecode(http:GetAsync(url.. "/users"))
-	
-	repeat task.wait() until d1
+	print('Sending data to server')
 
-	print("Users: ", d)
+	local did = functions.getDcID(receipt.PlayerId)
 
-	--local pName = functions.FindProductByID(reciept.ProductId)
-	--local pId = d["".. reciept.PlayerId .. ""].discordId
+	local status, msg = grant(receipt, did, plr)
 
-	--if table.find(d1[pId].products[hubID], pName) then
-	--	print("User already owns ".. pName.. "!")
+	local pName = functions.FindProductByID(plr, receipt.ProductId)
 
-	--	return Enum.ProductPurchaseDecision.NotProcessedYet
-	--end
+	print('Purchase complete')
 
-	print('httpget success')
-	print('sending data to server')
+	warn("STATUS:")
+	warn(status)
+	warn("MSG: ")
+	warn(msg)
 
-	local givePrct = grant(reciept, d, plr)
+	if status == true or status == "true" then
+		task.spawn(function()
+			local s, e = pcall(function()
+				task.wait(2)
 
-	local pName = functions.FindProductByID(plr, reciept.ProductId)
+				if game.SoundService:FindFirstChild("Money") then
+					game.SoundService.Money:Play()
+				end
 
-	print(givePrct)
+				if game.SoundService:FindFirstChild("PurchaseCompleted") then
+					game.SoundService.PurchaseCompleted:Play()
+				end
 
-	print('purchase complete')
+				for _, v in pairs(plr.PlayerGui:GetChildren()) do
+					if v.Name == "HubUI" then
+						v.purchased.aboutBg.desc.Text = "Your purchase of <b>".. pName .."</b> went through!\n\nYou have been sent the download link via discord."
 
-	task.spawn(function()
-		task.wait(2)
+						v.purchased.Visible = true
 
-		if game.SoundService:FindFirstChild("Money") then
-			game.SoundService.Money:Play()
-		end
+						local aboutBg = v.purchased.aboutBg
 
-		plr.PlayerGui.HubUI.purchased.aboutBg.desc.Text = "Your purchase of <b>".. pName .."</b> went through!\n\nYou have been sent the download link via discord."
+						local originalSize = UDim2.new(0.278, 0, 0.713, 0)
+						local originalPosition = UDim2.new(0.361, 0, 0.143, 0)
 
-		plr.PlayerGui.HubUI.purchased.Visible = true
+						aboutBg.AnchorPoint = Vector2.new(0, 0)
+						aboutBg.Position = UDim2.new(0.5, 0, 0.5, 0)
+						aboutBg.Size = UDim2.new(0, 0, 0, 0)
+						aboutBg.Visible = true
+						aboutBg.BackgroundTransparency = 1 
 
-		local aboutBg = plr.PlayerGui.HubUI.purchased.aboutBg
+						local tweenInfo = TweenInfo.new(
+							0.35,
+							Enum.EasingStyle.Back,
+							Enum.EasingDirection.Out
+						)
 
-		local originalSize = UDim2.new(0.278, 0, 0.713, 0)
-		local originalPosition = UDim2.new(0.361, 0, 0.143, 0)
+						local goal = {
+							Size = originalSize,
+							Position = originalPosition,
+							BackgroundTransparency = 0
+						}
 
-		-- Setup for animation
-		aboutBg.AnchorPoint = Vector2.new(0, 0)
-		aboutBg.Position = UDim2.new(0.5, 0, 0.5, 0)
-		aboutBg.Size = UDim2.new(0, 0, 0, 0)
-		aboutBg.Visible = true
-		aboutBg.BackgroundTransparency = 1 -- optional, fade in effect
+						local tween = ts:Create(aboutBg, tweenInfo, goal)
+						tween:Play()
+					end
+				end
+			end)
 
-		-- Tween to target
-		local tweenInfo = TweenInfo.new(
-			0.35,
-			Enum.EasingStyle.Back,
-			Enum.EasingDirection.Out
-		)
+			warn("SUCCESS")
+			warn(s)
 
-		local goal = {
-			Size = originalSize,
-			Position = originalPosition,
-			BackgroundTransparency = 0
-		}
-
-		local tween = ts:Create(aboutBg, tweenInfo, goal)
-		tween:Play()
-	end)
+			if e then
+				warn(e)
+			end
+		end)
+	else
+		plr:Kick("Error while giving product: ".. msg .. "; please contact nHub Support!")
+	end
 
 	return Enum.ProductPurchaseDecision.PurchaseGranted
 end
