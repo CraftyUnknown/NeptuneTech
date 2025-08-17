@@ -554,9 +554,6 @@ ms.ProcessReceipt = function(receipt)
 				end
 			end)
 
-			warn("SUCCESS")
-			warn(s)
-
 			if e then
 				warn(e)
 			end
