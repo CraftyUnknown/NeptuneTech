@@ -124,30 +124,32 @@ function setAbout(text)
 end
 
 function updateStats(hub) 
-	for _, v in pairs(game.Players:GetChildren()) do
-		if v:FindFirstChild("PlayerGui") and 
-			v.PlayerGui:FindFirstChild("HubUI") and 
-			v.PlayerGui.HubUI:FindFirstChild("home") and 
-			v.PlayerGui.HubUI.home:FindFirstChild("ownedProducts") then
+	pcall(function()
+		for _, v in pairs(game.Players:GetChildren()) do
+			if v:FindFirstChild("PlayerGui") and 
+				v.PlayerGui:FindFirstChild("HubUI") and 
+				v.PlayerGui.HubUI:FindFirstChild("home") and 
+				v.PlayerGui.HubUI.home:FindFirstChild("ownedProducts") then
 
-			local home = v.PlayerGui.HubUI.home
+				local home = v.PlayerGui.HubUI.home
 
-			home.ownedProducts.Text = #ownedProducts
-			home.totalProducts.Text = productCount
-			home.totalSales.Text = hub.totalSales
+				home.ownedProducts.Text = #ownedProducts
+				home.totalProducts.Text = productCount
+				home.totalSales.Text = hub.totalSales
 
-			local dcName = "Unable to get name"
-			local success, result = pcall(function()
-				return functions.getDcName(tostring(v.UserId))
-			end)
+				local dcName = "Unable to get name"
+				local success, result = pcall(function()
+					return functions.getDcName(tostring(v.UserId))
+				end)
 
-			if success then
-				dcName = result
+				if success then
+					dcName = result
+				end
+
+				home.dcname.Text = "<b>".. dcName .."</b>\n(".. functions.getDcID(tostring(v.UserId)) .. ")"
 			end
-
-			home.dcname.Text = "<b>".. dcName .."</b>\n(".. functions.getDcID(tostring(v.UserId)) .. ")"
 		end
-	end
+	end)
 end
 
 
@@ -263,7 +265,11 @@ for _, player in pairs(game.Players:GetChildren()) do
 				player.PlayerGui.HubUI.link.Visible = true
 				local code = random_string(6)
 				player.PlayerGui.HubUI.link.code.Text = "/link "..code
-				functions.createLinkCode(player.Name, player.UserId, code)
+				local success, msg = functions.createLinkCode(player.Name, player.UserId, code)
+				
+				if success == false or success == "false" then
+					player:Kick(msg)
+				end
 			else
 				player.PlayerGui.HubUI.link.Visible = false
 			end
