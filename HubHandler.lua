@@ -264,12 +264,22 @@ for _, player in pairs(game.Players:GetChildren()) do
 			if linkedString == "false" or linkedString == false then
 				player.PlayerGui.HubUI.link.Visible = true
 				local code = random_string(6)
-				player.PlayerGui.HubUI.link.code.Text = "/link "..code
+				
+				player.PlayerGui.HubUI.link.code.Text = "Contacting server..."
+				
 				local success, msg = functions.createLinkCode(player.Name, player.UserId, code)
+				
+				warn("CODE STATUS:")
+				warn(success, msg)
 				
 				if success == false or success == "false" then
 					player:Kick(msg)
 				end
+				
+				if success == true or success == "true"  then
+					player.PlayerGui.HubUI.link.code.Text = "/link "..code
+				end
+				
 			else
 				player.PlayerGui.HubUI.link.Visible = false
 			end
@@ -362,7 +372,7 @@ for i, v in pairs(hub.products) do
 				local reviews = c.reviews
 				local convImg = 0
 
-				if tonumber(v.image_id) > 0 then
+				if v.image_id and tonumber(v.image_id) > 0 then
 					image.Image = "rbxassetid://"..v.image_id
 				end
 
@@ -375,7 +385,7 @@ for i, v in pairs(hub.products) do
 				if table.find(ownedProducts, v.name) then
 					price.Text = "Owned"
 				else
-					if v.stock < 0 then
+					if v.stock and v.stock < 0 then
 						price.Text = p.PriceInRobux.. " R$ - Stock: ∞"
 					else
 						price.Text = p.PriceInRobux.. " R$ - Stock: ".. (v.stock or "∞")
@@ -384,7 +394,7 @@ for i, v in pairs(hub.products) do
 
 				c.Name = v.name
 
-				if v.reviewsAmount < 1 then
+				if v.reviewsAmount and v.reviewsAmount < 1 then
 					reviews.Text = '<font color="#AAAAAA" size="27">(no reviews yet)</font>'
 				else
 					local num = math.floor(tonumber(v.reviewsTotal / v.reviewsAmount))
@@ -429,7 +439,7 @@ for i, v in pairs(hub.products) do
 		end
 
 		if err then
-			print("Error while listing product; ", err)
+			print("Error while listing product: ", err)
 		end
 	end)
 end
