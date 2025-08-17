@@ -15,7 +15,7 @@ local s, loadingErr = pcall(function()
 		elseif config.Theme == "flat" then
 			UILoader.loadNoRound()
 		else
-			UILoader.load()
+			UILoader.load(config.Theme)
 		end
 	else
 		UILoader.load()
