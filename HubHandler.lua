@@ -521,7 +521,7 @@ ms.ProcessReceipt = function(receipt)
 
 				for _, v in pairs(plr.PlayerGui:GetChildren()) do
 					if v.Name == "HubUI" then
-						v.purchased.aboutBg.desc.Text = "Your purchase of <b>".. pName .."</b> went through!\n\nYou have been sent the download link via discord."
+						v.purchased.aboutBg.desc.Text = "Your purchase of <b>".. pName .."</b> went through!\n\nThe download instructions have been sent to you via discord."
 
 						v.purchased.Visible = true
 
