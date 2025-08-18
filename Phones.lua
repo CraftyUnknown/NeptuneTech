@@ -1,1 +1,340 @@
-local p = game:GetService("\67\104\97\116") local t = game:GetService("\77\97\114\107\101\116\112\108\97\99\101\83\101\114\118\105\99\101") local o = script.Parent.Phones local b = require(script.Parent.Settings) local g = b.GroupId local n = b.MinRank local c = require(9428572121) local h = require(82494717887252) local e = game:GetService("\84\101\120\116\83\101\114\118\105\99\101") local i = game:GetService("\80\108\97\121\101\114\115") local c = require(9428572121) local h = require(82494717887252) local s = "\110\101\112\116\117\110\101\80\104\111\110\101\115\32\124\124\32" print(s.. "\67\104\101\99\107\105\110\103\32\108\105\99\101\110\99\101\46\46\46") if game.PlaceId == 0 then warn(s.."\80\108\101\97\115\101\32\112\117\98\108\105\115\104\32\116\104\101\32\103\97\109\101\32\102\105\114\115\116\33") return end local el, e = pcall(function() if c:Whitelist("\54\50\100\57\49\98\48\56\56\100\57\56\54\57\99\98\56\57\99\50\52\55\50\102", "\97\51\55\107\122\100\104\97\108\103\113\100\111\106\104\114\100\99\53\111\53\103\104\103\101\97\49\99") == true or h:OwnsProduct(game.CreatorId,"\57\54\54\54\57\56\56\49\48\57\56\52\50\51\57\49\50\52","\110\101\112\116\117\110\101\80\104\111\110\101\115") == "\116\114\117\101" then print(s.. "\76\111\97\100\105\110\103\32\110\101\112\116\117\110\101\80\104\111\110\101\115\46\32\84\104\97\110\107\115\32\102\111\114\32\117\115\105\110\103\32\111\117\114\32\115\121\115\116\101\109\33") else warn(s.. "\68\105\100\32\121\111\117\32\112\117\114\99\104\97\115\101\32\111\110\32\66\117\105\108\116\66\121\66\105\116\47\111\117\114\32\111\110\108\105\110\101\32\115\116\111\114\101\63\32\84\104\101\110\32\112\108\101\97\115\101\32\99\114\101\97\116\101\32\97\32\39\66\105\108\108\105\110\103\39\32\116\105\99\107\101\116\32\104\101\114\101\58\32\104\116\116\112\115\58\47\47\100\105\115\99\111\114\100\46\103\103\47\89\67\110\119\85\69\121\110\115\113") warn(s.. "\80\108\101\97\115\101\32\112\117\114\99\104\97\115\101\32\97\32\118\97\108\105\100\32\108\105\99\101\110\99\101\32\105\110\32\111\114\100\101\114\32\116\111\32\117\115\101\32\116\104\105\115\32\112\114\111\100\117\99\116\33") script.Parent:Destroy() end end) if e then print(e) warn(s.."\65\110\32\101\114\114\111\114\32\111\99\99\117\114\101\100\32\119\104\105\108\101\32\99\104\101\99\107\105\110\103\32\116\104\101\32\108\105\99\101\110\99\101\33\32\68\105\100\32\121\111\117\32\101\110\97\98\108\101\32\72\84\84\80\32\83\101\114\118\105\99\101\115\63") return end for _, Tel in o:GetChildren() do if Tel:IsA("\77\111\100\101\108") then task.spawn(function() local _ = Tel:FindFirstChild("\80\104\111\110\101\78\117\109\98\101\114") if _ then local j_ _ = _.Value Tel.Display.GUI.Home.Top.Number.Text = _ for _, Btn in Tel:WaitForChild("\78\117\109\98\101\114\115"):GetChildren() do local m = Btn:FindFirstChildWhichIsA("\67\108\105\99\107\68\101\116\101\99\116\111\114") if m then m.MouseClick:Connect(function(q) if g > 0 then if q:GetRankInGroup(g) < n then return end end Tel.Phone.KeyPress:Play() Tel.Values.PlayerName.Value = q.Name if tonumber(Btn.Name) then Tel.Display.GUI.Home.Dial.Visible = true j_ = Tel.Values.Dialing.Value local dq = Tel.Values.Dialing.Value Tel.Values.Dialing.Value = dq..tostring(Btn.Name) Tel.Display.GUI.Home.Dial.Number.Text = Tel.Values.Dialing.Value end if Btn.Name == "\35" then local dq = tostring(Tel.Values.Dialing.Value) if #dq > 1 then Tel.Display.GUI.Home.Dial.Visible = true j_ = tostring(dq:sub(1, #dq-1)) Tel.Values.Dialing.Value = j_ Tel.Display.GUI.Home.Dial.Number.Text = tostring(Tel.Values.Dialing.Value) else Tel.Display.GUI.Home.Dial.Number.Text = "" Tel.Values.Dialing.Value = "" Tel.Display.GUI.Home.Dial.Visible = false end end if Btn.Name == "\80\105\99\107\85\112" then if Tel.Values.Calling.Value == true then local k = Tel.PhoneNumber.Value local l = nil for _, Phone in o:GetChildren() do local el, e = pcall(function() if Phone:FindFirstChild("\80\104\111\110\101\78\117\109\98\101\114") then if Phone.Values.ReceivingCall.Value == k then l = Phone end task.wait() end end) end if l then l.Display.GUI.Home.Dial.Visible = false l.Phone.Ringtone.Playing = false Tel.Phone.Dial.Playing = false l.Values.ReceivingCall.Value = "\102\97\108\115\101" Tel.Display.GUI.Home.Dial.Visible = false Tel.Display.GUI.Home.Calling.Visible = false Tel.Display.GUI.Home.Calling.Number.Text = "" l.Display.GUI.Home.Incoming.Visible = false l.Display.GUI.Home.Incoming.Number.Text = "" l.Display.GUI.Home.Incoming.Image.Blink.Value = false Tel.Display.GUI.Home.Calling.Image.Blink.Value = false l.Values.Calling.Value = false p:Chat(l.ChatPart, "\67\97\108\108\32\101\110\100\101\100\46") p:Chat(Tel.ChatPart, "\89\111\117\32\101\110\100\101\100\32\116\104\101\32\99\97\108\108\46") Tel.Values.Dialing.Value = "" Tel.Display.GUI.Home.Dial.Number.Text = "" end Tel.Values.Calling.Value = false end if Tel.Phone.Error.Playing == true then Tel.Phone.Error.Playing = false Tel.Display.GUI.Home.Dial.Visible = false Tel.Values.Dialing.Value = "" Tel.Display.GUI.Home.Dial.Number.Text = "" Tel.Phone.HangUp:Play() end if tonumber(Tel.Values.CallingWith.Value) then local l = nil for _, Phone in o:GetChildren() do local el, e = pcall(function() if Phone:FindFirstChild("\80\104\111\110\101\78\117\109\98\101\114") then if tostring(Phone.PhoneNumber.Value) == Tel.Values.CallingWith.Value then l = Phone end task.wait() end end) end if l then Tel.Values.Dialing.Value = "" l.Values.Dialing.Value = "" Tel.Values.CallingWith.Value = "\102\97\108\115\101" l.Values.CallingWith.Value = "\102\97\108\115\101" Tel.Phone.End:Play() Tel.Phone.HangUp:Play() Tel.Display.GUI.Home.Calling.Number.Text = "" Tel.Display.GUI.Home.Calling.Visible = false l.Display.GUI.Home.Calling.Number.Text = "" l.Display.GUI.Home.Calling.Visible = false l.Display.GUI.Home.Incoming.Number.Text = "" l.Display.GUI.Home.Incoming.Visible = false p:Chat(l.ChatPart, "\67\97\108\108\32\101\110\100\101\100\46") p:Chat(Tel.ChatPart, "\89\111\117\32\101\110\100\101\100\32\116\104\101\32\99\97\108\108\46") Tel.Values.Calling.Value = false l.Values.Calling.Value = false end else task.spawn(function() local l = nil for _, Phone in o:GetChildren() do local el, e = pcall(function() if Phone:FindFirstChild("\80\104\111\110\101\78\117\109\98\101\114") then if tostring(Phone.PhoneNumber.Value) == Tel.Values.ReceivingCall.Value then l = Phone end task.wait() end end) end if l then if tonumber(Tel.Values.ReceivingCall.Value) then repeat Tel.Phone.Ringtone:Stop() Tel.Phone.Ringtone.Playing = false until Tel.Phone.Ringtone.Playing == false repeat l.Phone.Dial:Stop() l.Phone.Dial.Playing = false until l.Phone.Dial.Playing == false Tel.Values.CallingWith.Value = tostring(Tel.Values.ReceivingCall.Value) Tel.Values.ReceivingCall.Value = "\102\97\108\115\101" l.Values.CallingWith.Value = tostring(Tel.PhoneNumber.Value) Tel.Display.GUI.Home.Incoming.Image.Blink.Value = false l.Display.GUI.Home.Calling.Image.Blink.Value = false Tel.Display.GUI.Home.Incoming.Visible = false Tel.Display.GUI.Home.Calling.Visible = true Tel.Display.GUI.Home.Calling.Number.Text = tostring(Tel.Values.CallingWith.Value) Tel.Values.Calling.Value = true l.Values.Calling.Value = true end end end) end end if Btn.Name == "\68\110\68" then Tel.Values.DnD.Value = not Tel.Values.DnD.Value Tel.Display.GUI.Home.DnD.Visible = Tel.Values.DnD.Value end if Btn.Name == "\67\97\109" then game.ReplicatedStorage.NeptunePhoneChangeCamera:FireClient(q, Tel.CamPart) end if Btn.Name == "\67\97\108\108" then if Tel.Values.Calling.Value == true then return end task.spawn(function() local k = Tel.Values.Dialing.Value local l = nil if k == _ then Tel.Values.Dialing.Value = "" return end for _, Phone in o:GetChildren() do local el, e = pcall(function() if Phone:FindFirstChild("\80\104\111\110\101\78\117\109\98\101\114") then if Phone.PhoneNumber.Value == k then l = Phone end task.wait() end end) end if l and l.Values.Calling.Value == false and l.Values.DnD.Value == false then Tel.Values.Calling.Value = true l.Display.GUI.Home.Dial.Visible = false l.Phone.Ringtone.Playing = true Tel.Phone.Dial.Playing = true l.Values.ReceivingCall.Value = _ Tel.Display.GUI.Home.Dial.Visible = false Tel.Display.GUI.Home.Calling.Visible = true Tel.Display.GUI.Home.Calling.Number.Text = tostring(l.PhoneNumber.Value) l.Display.GUI.Home.Incoming.Visible = true l.Display.GUI.Home.Incoming.Number.Text = tostring(_) l.Display.GUI.Home.Incoming.Image.Blink.Value = true Tel.Display.GUI.Home.Calling.Image.Blink.Value = true l.Values.Calling.Value = true p:Chat(l.ChatPart, q.Name.."\32\105\115\32\99\97\108\108\105\110\103\32\121\111\117\46") task.wait(.1) p:Chat(l.ChatPart, "\80\114\101\115\115\32\116\104\101\32\104\97\110\100\115\101\116\32\49\120\32\116\111\32\97\99\99\101\112\116\44\32\50\120\32\116\111\32\100\101\99\108\105\110\101\46") else if l then if l.Values.Calling.Value == true then Tel.Values.Calling.Value = true Tel.Display.GUI.Home.Dial.Visible = false Tel.Display.GUI.Home.Dial.Number.Text = "" Tel.Values.Dialing.Value = "" Tel.Phone.Unavailable:Play() Tel.Phone.Unavailable.Ended:Wait() task.wait(.5) Tel.Phone.End:Play() Tel.Phone.End.Ended:Wait() Tel.Values.Calling.Value = false elseif l.Values.DnD.Value == true then Tel.Values.Calling.Value = true Tel.Display.GUI.Home.Dial.Visible = false Tel.Display.GUI.Home.Dial.Number.Text = "" Tel.Values.Dialing.Value = "" Tel.Phone.Unavailable:Play() Tel.Phone.Unavailable.Ended:Wait() task.wait(.5) Tel.Phone.End:Play() Tel.Phone.End.Ended:Wait() Tel.Values.Calling.Value = false else Tel.Values.Calling.Value = true Tel.Display.GUI.Home.Dial.Visible = false Tel.Display.GUI.Home.Dial.Number.Text = "" Tel.Values.Dialing.Value = "" Tel.Phone.NotInService:Play() Tel.Phone.NotInService.Ended:Wait() task.wait(.5) Tel.Phone.End:Play() Tel.Phone.End.Ended:Wait() Tel.Values.Calling.Value = false end else Tel.Values.Calling.Value = true Tel.Display.GUI.Home.Dial.Visible = false Tel.Display.GUI.Home.Dial.Number.Text = "" Tel.Values.Dialing.Value = "" Tel.Phone.NotInService:Play() Tel.Phone.NotInService.Ended:Wait() task.wait(.5) Tel.Phone.End:Play() Tel.Phone.End.Ended:Wait() Tel.Values.Calling.Value = false end end end) end end) end end end end) end end local function j(a) a.Chatted:Connect(function(d) local ie local ci, result = pcall(function() return e:FilterStringAsync(d, a.UserId) end) if ci then local hc, filtered = pcall(function() return result:GetNonChatStringForBroadcastAsync() end) if hc then ie = filtered else ie = "\91\77\101\115\115\97\103\101\32\102\97\105\108\101\100\32\116\111\32\102\105\108\116\101\114\93" end else return end local sh = nil for _, phone in o:GetChildren() do if phone:FindFirstChild("\80\104\111\110\101\78\117\109\98\101\114") and phone.Values.PlayerName.Value == a.Name then sh = phone break end end if sh then local f = tostring(sh.Values.CallingWith.Value) if f ~= "" then for _, phone in o:GetChildren() do if phone:FindFirstChild("\80\104\111\110\101\78\117\109\98\101\114") and phone.PhoneNumber.Value == f then if phone.Values.Calling.Value or phone.Values.ReceivingCall.Value == a.Name then p:Chat(phone.ChatPart, a.Name.."\58\32"..ie) end end end end end for _, phone in o:GetChildren() do if phone:FindFirstChild("\80\104\111\110\101\78\117\109\98\101\114") and phone.Values.CallingWith.Value == a.Name then p:Chat(phone.ChatPart, a.Name.."\58\32"..ie) end end end) end i.PlayerAdded:Connect(function(a) j(a) end) for _, a in i:GetPlayers() do j(a) end 
+local CS = game:GetService("Chat")
+local MS = game:GetService("MarketplaceService")
+local Phones = script.Parent.Phones
+local Settings = require(script.Parent.Settings)
+local GroupId = Settings.GroupId
+local MinRank = Settings.MinRank
+local Parcel = require(9428572121)
+local neptuneHub = require(82494717887252)
+local TextService = game:GetService("TextService")
+local Players = game:GetService("Players")
+
+local Prefix = "neptunePhones || "
+
+print(Prefix.. "Checking licence...")
+
+if game.PlaceId == 0 then warn(Prefix.."Please publish the game first!") return end
+
+local s, e = pcall(function()
+	if Parcel:Whitelist("62d91b088d9869cb89c2472f", "a37kzdhalgqdojhrdc5o5ghgea1c") == true or neptuneHub:OwnsProduct(game.CreatorId,"966698810984239124","neptunePhones") == "true" then
+		print(Prefix.. "Loading neptunePhones. Thanks for using our system!")
+	else
+		warn(Prefix.. "Did you purchase on BuiltByBit/our online store? Then please create a 'Billing' ticket here: https://discord.gg/YCnwUEynsq")
+		warn(Prefix.. "Please purchase a valid licence in order to use this product!")
+		script.Parent:Destroy()
+	end
+end)
+
+if e then
+	print(e)
+	warn(Prefix.."An error occured while checking the licence! Did you enable HTTP Services?")
+
+	return
+end
+
+for _, Tel in Phones:GetChildren() do
+	if Tel:IsA("Model") then
+		task.spawn(function()
+			local TelNum = Tel:FindFirstChild("PhoneNumber")
+			if TelNum then
+				local LastNum
+				TelNum = TelNum.Value
+				Tel.Display.GUI.Home.Top.Number.Text = TelNum
+				for _, Btn in Tel:WaitForChild("Numbers"):GetChildren() do
+					local clickDetector = Btn:FindFirstChildWhichIsA("ClickDetector")
+					if clickDetector then
+						clickDetector.MouseClick:Connect(function(Plr)
+							if GroupId > 0 then
+								if Plr:GetRankInGroup(GroupId) < MinRank then
+									return
+								end
+							end
+							Tel.Phone.KeyPress:Play()
+							Tel.Values.PlayerName.Value = Plr.Name
+							if tonumber(Btn.Name) then
+								Tel.Display.GUI.Home.Dial.Visible = true
+								LastNum = Tel.Values.Dialing.Value
+								local str = Tel.Values.Dialing.Value
+								Tel.Values.Dialing.Value = str..tostring(Btn.Name)
+								Tel.Display.GUI.Home.Dial.Number.Text = Tel.Values.Dialing.Value
+							end
+							if Btn.Name == "#" then
+								local str = tostring(Tel.Values.Dialing.Value)
+								if #str > 1 then
+									Tel.Display.GUI.Home.Dial.Visible = true
+									LastNum = tostring(str:sub(1, #str-1))
+									Tel.Values.Dialing.Value = LastNum
+									Tel.Display.GUI.Home.Dial.Number.Text = tostring(Tel.Values.Dialing.Value)
+								else
+									Tel.Display.GUI.Home.Dial.Number.Text = ""
+									Tel.Values.Dialing.Value = ""
+									Tel.Display.GUI.Home.Dial.Visible = false
+								end
+							end
+							if Btn.Name == "PickUp" then
+								if Tel.Values.Calling.Value == true then
+									local Num = Tel.PhoneNumber.Value
+									local DialingPhone = nil
+									for _, Phone in Phones:GetChildren() do
+										local s, e = pcall(function()
+											if Phone:FindFirstChild("PhoneNumber") then
+												if Phone.Values.ReceivingCall.Value == Num then
+													DialingPhone = Phone
+												end
+												task.wait()
+											end
+										end)
+									end
+									if DialingPhone then
+										DialingPhone.Display.GUI.Home.Dial.Visible = false
+										DialingPhone.Phone.Ringtone.Playing = false
+										Tel.Phone.Dial.Playing = false
+										DialingPhone.Values.ReceivingCall.Value = "false"
+										Tel.Display.GUI.Home.Dial.Visible = false
+										Tel.Display.GUI.Home.Calling.Visible = false
+										Tel.Display.GUI.Home.Calling.Number.Text = ""
+										DialingPhone.Display.GUI.Home.Incoming.Visible = false
+										DialingPhone.Display.GUI.Home.Incoming.Number.Text = ""
+										DialingPhone.Display.GUI.Home.Incoming.Image.Blink.Value = false
+										Tel.Display.GUI.Home.Calling.Image.Blink.Value = false
+										DialingPhone.Values.Calling.Value = false
+										CS:Chat(DialingPhone.ChatPart, "Call ended.")
+										CS:Chat(Tel.ChatPart, "You ended the call.")
+										Tel.Values.Dialing.Value = ""
+										Tel.Display.GUI.Home.Dial.Number.Text = ""
+									end
+									Tel.Values.Calling.Value = false
+								end
+								if Tel.Phone.Error.Playing == true then
+									Tel.Phone.Error.Playing = false
+									Tel.Display.GUI.Home.Dial.Visible = false
+									Tel.Values.Dialing.Value = ""
+									Tel.Display.GUI.Home.Dial.Number.Text = ""
+									Tel.Phone.HangUp:Play()
+								end
+								if tonumber(Tel.Values.CallingWith.Value) then
+									local DialingPhone = nil
+									for _, Phone in Phones:GetChildren() do
+										local s, e = pcall(function()
+											if Phone:FindFirstChild("PhoneNumber") then
+												if tostring(Phone.PhoneNumber.Value) == Tel.Values.CallingWith.Value then
+													DialingPhone = Phone
+												end
+												task.wait()
+											end
+										end)
+									end
+									if DialingPhone then
+										Tel.Values.Dialing.Value = ""
+										DialingPhone.Values.Dialing.Value = ""
+										Tel.Values.CallingWith.Value = "false"
+										DialingPhone.Values.CallingWith.Value = "false"
+										Tel.Phone.End:Play()
+										Tel.Phone.HangUp:Play()
+										Tel.Display.GUI.Home.Calling.Number.Text = ""
+										Tel.Display.GUI.Home.Calling.Visible = false
+										DialingPhone.Display.GUI.Home.Calling.Number.Text = ""
+										DialingPhone.Display.GUI.Home.Calling.Visible = false
+										DialingPhone.Display.GUI.Home.Incoming.Number.Text = ""
+										DialingPhone.Display.GUI.Home.Incoming.Visible = false
+										CS:Chat(DialingPhone.ChatPart, "Call ended.")
+										CS:Chat(Tel.ChatPart, "You ended the call.")
+										Tel.Values.Calling.Value = false
+										DialingPhone.Values.Calling.Value = false
+									end
+								else
+									task.spawn(function()
+										local DialingPhone = nil
+										for _, Phone in Phones:GetChildren() do
+											local s, e = pcall(function()
+												if Phone:FindFirstChild("PhoneNumber") then
+													if tostring(Phone.PhoneNumber.Value) == Tel.Values.ReceivingCall.Value then
+														DialingPhone = Phone
+													end
+													task.wait()
+												end
+											end)
+										end
+										if DialingPhone then
+											if tonumber(Tel.Values.ReceivingCall.Value) then
+												repeat
+													Tel.Phone.Ringtone:Stop()
+													Tel.Phone.Ringtone.Playing = false
+												until Tel.Phone.Ringtone.Playing == false
+												repeat
+													DialingPhone.Phone.Dial:Stop()
+													DialingPhone.Phone.Dial.Playing = false
+												until DialingPhone.Phone.Dial.Playing == false
+												Tel.Values.CallingWith.Value = tostring(Tel.Values.ReceivingCall.Value)
+												Tel.Values.ReceivingCall.Value = "false"
+												DialingPhone.Values.CallingWith.Value = tostring(Tel.PhoneNumber.Value)
+												Tel.Display.GUI.Home.Incoming.Image.Blink.Value = false
+												DialingPhone.Display.GUI.Home.Calling.Image.Blink.Value = false
+												Tel.Display.GUI.Home.Incoming.Visible = false
+												Tel.Display.GUI.Home.Calling.Visible = true
+												Tel.Display.GUI.Home.Calling.Number.Text = tostring(Tel.Values.CallingWith.Value)
+												Tel.Values.Calling.Value = true
+												DialingPhone.Values.Calling.Value = true
+											end
+										end
+									end)
+								end
+							end
+							if Btn.Name == "DnD" then
+								Tel.Values.DnD.Value = not Tel.Values.DnD.Value
+								Tel.Display.GUI.Home.DnD.Visible = Tel.Values.DnD.Value
+							end
+							if Btn.Name == "Cam" then
+								game.ReplicatedStorage.NeptunePhoneChangeCamera:FireClient(Plr, Tel.CamPart)
+							end
+							if Btn.Name == "Call" then
+								if Tel.Values.Calling.Value == true then return end
+								task.spawn(function()
+									local Num = Tel.Values.Dialing.Value
+									local DialingPhone = nil
+									if Num == TelNum then
+										Tel.Values.Dialing.Value = ""
+										return
+									end
+									for _, Phone in Phones:GetChildren() do
+										local s, e = pcall(function()
+											if Phone:FindFirstChild("PhoneNumber") then
+												if Phone.PhoneNumber.Value == Num then
+													DialingPhone = Phone
+												end
+												task.wait()
+											end
+										end)
+									end
+									if DialingPhone and DialingPhone.Values.Calling.Value == false and DialingPhone.Values.DnD.Value == false then
+										Tel.Values.Calling.Value = true
+										DialingPhone.Display.GUI.Home.Dial.Visible = false
+										DialingPhone.Phone.Ringtone.Playing = true
+										Tel.Phone.Dial.Playing = true
+										DialingPhone.Values.ReceivingCall.Value = TelNum
+										Tel.Display.GUI.Home.Dial.Visible = false
+										Tel.Display.GUI.Home.Calling.Visible = true
+										Tel.Display.GUI.Home.Calling.Number.Text = tostring(DialingPhone.PhoneNumber.Value)
+										DialingPhone.Display.GUI.Home.Incoming.Visible = true
+										DialingPhone.Display.GUI.Home.Incoming.Number.Text = tostring(TelNum)
+										DialingPhone.Display.GUI.Home.Incoming.Image.Blink.Value = true
+										Tel.Display.GUI.Home.Calling.Image.Blink.Value = true
+										DialingPhone.Values.Calling.Value = true
+										CS:Chat(DialingPhone.ChatPart, Plr.Name.." is calling you.")
+										task.wait(.1)
+										CS:Chat(DialingPhone.ChatPart, "Press the handset 1x to accept, 2x to decline.")
+									else
+										if DialingPhone then
+											if DialingPhone.Values.Calling.Value == true then
+												Tel.Values.Calling.Value = true
+												Tel.Display.GUI.Home.Dial.Visible = false
+												Tel.Display.GUI.Home.Dial.Number.Text = ""
+												Tel.Values.Dialing.Value = ""
+												Tel.Phone.Unavailable:Play()
+												Tel.Phone.Unavailable.Ended:Wait()
+												task.wait(.5)
+												Tel.Phone.End:Play()
+												Tel.Phone.End.Ended:Wait()
+												Tel.Values.Calling.Value = false
+											elseif DialingPhone.Values.DnD.Value == true then
+												Tel.Values.Calling.Value = true
+												Tel.Display.GUI.Home.Dial.Visible = false
+												Tel.Display.GUI.Home.Dial.Number.Text = ""
+												Tel.Values.Dialing.Value = ""
+												Tel.Phone.Unavailable:Play()
+												Tel.Phone.Unavailable.Ended:Wait()
+												task.wait(.5)
+												Tel.Phone.End:Play()
+												Tel.Phone.End.Ended:Wait()
+												Tel.Values.Calling.Value = false
+											else
+												Tel.Values.Calling.Value = true
+												Tel.Display.GUI.Home.Dial.Visible = false
+												Tel.Display.GUI.Home.Dial.Number.Text = ""
+												Tel.Values.Dialing.Value = ""
+												Tel.Phone.NotInService:Play()
+												Tel.Phone.NotInService.Ended:Wait()
+												task.wait(.5)
+												Tel.Phone.End:Play()
+												Tel.Phone.End.Ended:Wait()
+												Tel.Values.Calling.Value = false
+											end
+										else
+											Tel.Values.Calling.Value = true
+											Tel.Display.GUI.Home.Dial.Visible = false
+											Tel.Display.GUI.Home.Dial.Number.Text = ""
+											Tel.Values.Dialing.Value = ""
+											Tel.Phone.NotInService:Play()
+											Tel.Phone.NotInService.Ended:Wait()
+											task.wait(.5)
+											Tel.Phone.End:Play()
+											Tel.Phone.End.Ended:Wait()
+											Tel.Values.Calling.Value = false
+										end
+									end
+								end)
+							end
+						end)
+					end
+				end
+			end
+		end)
+	end
+end
+
+local function handlePlayer(player)
+	player.Chatted:Connect(function(Msg)
+		local filteredMsg
+		local success, result = pcall(function()
+			return TextService:FilterStringAsync(Msg, player.UserId)
+		end)
+		if success then
+			local ok, filtered = pcall(function()
+				return result:GetNonChatStringForBroadcastAsync()
+			end)
+			if ok then
+				filteredMsg = filtered
+			else
+				filteredMsg = "[Message failed to filter]"
+			end
+		else
+			return
+		end
+
+		local playerPhone = nil
+		for _, phone in Phones:GetChildren() do
+			if phone:FindFirstChild("PhoneNumber") and phone.Values.PlayerName.Value == player.Name then
+				playerPhone = phone
+				break
+			end
+		end
+
+		if playerPhone then
+			local targetNumber = tostring(playerPhone.Values.CallingWith.Value)
+			if targetNumber ~= "" then
+				for _, phone in Phones:GetChildren() do
+					if phone:FindFirstChild("PhoneNumber") and phone.PhoneNumber.Value == targetNumber then
+						if phone.Values.Calling.Value or phone.Values.ReceivingCall.Value == player.Name then
+							CS:Chat(phone.ChatPart, player.Name..": "..filteredMsg)
+						end
+					end
+				end
+			end
+		end
+
+		for _, phone in Phones:GetChildren() do
+			if phone:FindFirstChild("PhoneNumber") and phone.Values.CallingWith.Value == player.Name then
+				CS:Chat(phone.ChatPart, player.Name..": "..filteredMsg)
+			end
+		end
+	end)
+end
+
+Players.PlayerAdded:Connect(function(player)
+	handlePlayer(player)
+end)
+
+for _, player in Players:GetPlayers() do
+	handlePlayer(player)
+end
+
