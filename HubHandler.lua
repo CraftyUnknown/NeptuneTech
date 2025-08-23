@@ -337,6 +337,10 @@ pcall(function()
 			if owner.data.banned and owner.data.banned == true or owner.data.banned == "true" then
 				for _, v in pairs(game.Players:GetChildren()) do v:Kick("Hub owner is banned from using nHub.") end
 			end
+			
+			if owner.data.ownsLicence and owner.data.ownsLicence < 1 then
+				for _, v in pairs(game.Players:GetChildren()) do v:Kick("As of August 22, nHub Free is no longer supported. We’re sorry for the inconvenience. Please contact neptuneTech for more information.") end
+			end
 		end
 	end
 end)
