@@ -518,7 +518,7 @@ function grant(receipt, discordId, plr)
 
 	Data = http:JSONEncode(Data)
 
-	local res = http:PostAsync(url.. "/giveproduct", Data)
+	local res = http:PostAsync(url.. "/api/giveproduct", Data)
 	local resData = http:JSONDecode(res)
 
 	return resData.success, (resData.message or "-")
