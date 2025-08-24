@@ -158,9 +158,8 @@ function updateStats(hub)
 					return functions.getDcName(tostring(v.UserId))
 				end)
 
-				if success then
-					dcName = result
-				end
+				dcName = result
+				
 
 				home.dcname.Text = "<b>".. dcName .."</b>\n(".. functions.getDcID(tostring(v.UserId)) .. ")"
 			end
@@ -396,11 +395,11 @@ for i, v in pairs(hub.products) do
 					image.Image = "rbxassetid://"..v.image_id
 				end
 
-				local p = ms:GetProductInfo(v.devproduct, Enum.InfoType.Product)
+				local p = ms:GetProductInfo(v.product_id, Enum.InfoType.Product)
 
 				desc.Text = v.description
 				name.Text = v.name
-				c.id.Value = v.devproduct
+				c.id.Value = v.product_id
 
 				if table.find(ownedProducts, v.name) then
 					price.Text = "Owned"
@@ -414,10 +413,10 @@ for i, v in pairs(hub.products) do
 
 				c.Name = v.name
 
-				if v.reviewsAmount and v.reviewsAmount < 1 then
+				if v.reviews.amount and v.reviews.amount < 1 then
 					reviews.Text = '<font color="#AAAAAA" size="27">(no reviews yet)</font>'
 				else
-					local num = math.floor(tonumber(v.reviewsTotal / v.reviewsAmount))
+					local num = math.floor(tonumber(v.reviews.total or v.reviewsTotal / v.reviews.amount))
 					local totalStars = 5
 
 					reviews.RichText = true
@@ -431,7 +430,7 @@ for i, v in pairs(hub.products) do
 						reviews.Text = reviews.Text .. '<font color="#AAAAAA" size="27">☆</font>'
 					end
 
-					reviews.Text = reviews.Text .. '<font color="#AAAAAA" size="20"> (' .. v.reviewsAmount .. ')</font>'
+					reviews.Text = reviews.Text .. '<font color="#AAAAAA" size="20"> (' .. v.reviews.amount .. ')</font>'
 				end
 
 				for _, plr in pairs(game.Players:GetChildren()) do
