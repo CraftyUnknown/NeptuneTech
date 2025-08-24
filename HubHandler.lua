@@ -151,7 +151,7 @@ function updateStats(hub)
 
 				home.ownedProducts.Text = #ownedProducts
 				home.totalProducts.Text = productCount
-				home.totalSales.Text = hub.totalSales
+				home.totalSales.Text = hub.total_sales
 
 				local dcName = "Unable to get name"
 				local success, result = pcall(function()
@@ -321,7 +321,7 @@ until hub
 if hub == false or not hub then for _, v in pairs(game.Players:GetChildren()) do v:Kick("Hub has not been set up yet. Please contact owner.") end end
 
 local hubName = hub.name
-local groupId = hub.groupID
+local groupId = hub.ids.group
 local hubID = config.HubID
 
 pcall(function()
@@ -354,14 +354,14 @@ setGroupName(hubName)
 aboutLabel.Text = hub.about
 setAbout(hub.about)
 
-local groupIcon = getGroupIcon(hub.groupID)
+local groupIcon = getGroupIcon(hub.ids.group)
 
 ui.side.groupName.group.Image = groupIcon
 
 print("About: ", hub.about)
 
 local musicSuccess, musicErr = pcall(function()
-	game.SoundService.Music.SoundId = "rbxassetid://".. tonumber(hub.music_id)
+	game.SoundService.Music.SoundId = "rbxassetid://".. tonumber(hub.ids.music)
 end)
 
 for _, player in pairs(game.Players:GetChildren()) do
@@ -448,7 +448,7 @@ for i, v in pairs(hub.products) do
 					end
 				end
 
-				ui.side.groupName.group.Image = getGroupIcon(hub.groupID)
+				ui.side.groupName.group.Image = getGroupIcon(hub.ids.group)
 
 				task.wait()
 			end
