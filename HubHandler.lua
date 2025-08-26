@@ -149,7 +149,7 @@ function updateStats(hub)
 
 				local home = v.PlayerGui.HubUI.home
 
-				home.ownedProducts.Text = #ownedProducts
+				home.owned_licences.Text = #ownedProducts
 				home.totalProducts.Text = productCount
 				home.totalSales.Text = hub.total_sales
 
@@ -234,7 +234,7 @@ for _, player in pairs(game.Players:GetChildren()) do
 
 			local dcId = functions.getDcID(tostring(player.UserId))
 
-			for _, v1 in pairs(a1.data.ownedProducts[config.HubID]) do
+			for _, v1 in pairs(a1.data.owned_licences[config.HubID]) do
 				table.insert(ownedProducts, v1)
 			end
 		end)
@@ -337,7 +337,7 @@ pcall(function()
 				for _, v in pairs(game.Players:GetChildren()) do v:Kick("Hub owner is banned from using nHub.") end
 			end
 			
-			if owner.data.ownsLicence and owner.data.ownsLicence < 1 then
+			if owner.data.owned_licences.licence and owner.data.owned_licences.licence < 1 then
 				for _, v in pairs(game.Players:GetChildren()) do v:Kick("As of August 22, nHub Free is no longer supported. We’re sorry for the inconvenience. Please contact neptuneTech for more information.") end
 			end
 		end
