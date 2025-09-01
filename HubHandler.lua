@@ -597,12 +597,12 @@ end
 freeevent.OnServerEvent:Connect(function(plr, pName, pId)
 	print('Sending data to server')
 	
-	local purchaseId = random_string(20)
+	local purchaseId = random_string(32)
 	
 	local fakeReceipt = {
 		["ProductId"] = pId,
 		["PlayerId"] = plr.UserId,
-		["PurchaseId"] = purchaseId,
+		["PurchaseId"] = "FREE_".. purchaseId,
 	}
 
 	local did = functions.getDcID(plr.UserId)
