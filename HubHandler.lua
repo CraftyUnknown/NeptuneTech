@@ -3,6 +3,9 @@ local http = game:GetService("HttpService")
 local ts = game:GetService("TweenService")
 local players = game.Players
 
+local freeevent = Instance.new("RemoteEvent", game.ReplicatedStorage)
+freeevent.Name = "GrantFreeProduct"
+
 local config = require(game.ServerScriptService.Configuration)
 
 local s, loadingErr = pcall(function()
@@ -404,10 +407,28 @@ for i, v in pairs(hub.products) do
 				if table.find(ownedProducts, v.name) then
 					price.Text = "Owned"
 				else
+					local robuxprice = p.PriceInRobux
+					
 					if v.stock and v.stock < 0 then
-						price.Text = p.PriceInRobux.. " R$ - Stock: ∞"
+						if robuxprice > 1 then
+							price.Text = p.PriceInRobux.. " R$ - Stock: ".. (v.stock or "∞")
+						else
+							if c:FindFirstChild("free") then
+								c.free.Value = true
+							end
+							
+							price.Text = "Free - Stock: ∞"
+						end
 					else
-						price.Text = p.PriceInRobux.. " R$ - Stock: ".. (v.stock or "∞")
+						if robuxprice > 1 then
+							price.Text = p.PriceInRobux.. " R$ - Stock: ".. (v.stock or "∞")
+						else
+							if c:FindFirstChild("free") then
+								c.free.Value = true
+							end
+							
+							price.Text = "Free - Stock: ∞"
+						end
 					end
 				end
 
@@ -458,7 +479,7 @@ for i, v in pairs(hub.products) do
 		end
 
 		if err then
-			print("Error while listing product: ", err)
+			warn("Error while listing product: ", err)
 		end
 	end)
 end
@@ -499,20 +520,66 @@ local function onPromptPurchaseFinished(player, assetId, isPurchased)
 	end
 end
 
+function showPurchasedUI(plr, pName)
+	for _, v in pairs(plr.PlayerGui:GetChildren()) do
+		if v.Name == "HubUI" then
+			v.purchased.aboutBg.desc.Text = "Your purchase of <b>".. pName .."</b> went through!\n\nThe download instructions have been sent to you via discord."
+
+			v.purchased.Visible = true
+
+			local aboutBg = v.purchased.aboutBg
+
+			local originalSize = UDim2.new(0.278, 0, 0.713, 0)
+			local originalPosition = UDim2.new(0.361, 0, 0.143, 0)
+
+			aboutBg.AnchorPoint = Vector2.new(0, 0)
+			aboutBg.Position = UDim2.new(0.5, 0, 0.5, 0)
+			aboutBg.Size = UDim2.new(0, 0, 0, 0)
+			aboutBg.Visible = true
+			aboutBg.BackgroundTransparency = 1 
+
+			local tweenInfo = TweenInfo.new(
+				0.35,
+				Enum.EasingStyle.Back,
+				Enum.EasingDirection.Out
+			)
+
+			local goal = {
+				Size = originalSize,
+				Position = originalPosition,
+				BackgroundTransparency = 0
+			}
+
+			local tween = ts:Create(aboutBg, tweenInfo, goal)
+			tween:Play()
+		end
+	end
+end
+
 function grant(receipt, discordId, plr)
 	local plr = game.Players:GetPlayerByUserId(receipt.PlayerId)
 
 	local pName = functions.FindProductByID(plr, receipt.ProductId)
 
 	local Data = {
-		["username"] = plr.Name,
-		["userID"] = receipt.PlayerId,
-		["productName"] = pName,
-		["devProductID"] = receipt.ProductId,
-		["hubID"] = config.HubID,
-		["apiKey"] = config.APIkey,
-		["dcName"] = discordId,
-		["purchaseID"] = receipt.PurchaseId 
+		["user"] = {
+			["roblox"] = {
+				["name"] = plr.Name,
+				["id"] = receipt.PlayerId,
+			},
+			["discord"] = {
+				["id"] = discordId,
+			}
+		},
+		["product"] = {
+			["name"] = pName,
+			["id"] = receipt.ProductId,
+		},
+		["hub"] = {
+			["id"] = config.HubID,
+			["api_key"] = config.APIkey,
+		},
+		["purchase_id"] = receipt.PurchaseId 
 	}
 
 	Data = http:JSONEncode(Data)
@@ -522,6 +589,53 @@ function grant(receipt, discordId, plr)
 
 	return resData.success, (resData.message or "-")
 end
+
+freeevent.OnServerEvent:Connect(function(plr, pName, pId)
+	print('Sending data to server')
+	
+	local fakeReceipt = {
+		["ProductId"] = pId,
+		["PlayerId"] = plr.UserId,
+		["PurchaseId"] = random_string(20),
+	}
+
+	local did = functions.getDcID(plr.UserId)
+
+	local status, msg = grant(fakeReceipt, did, plr)
+
+	local pName = functions.FindProductByID(plr, pId)
+
+	print('Purchase complete')
+
+	warn("STATUS:")
+	warn(status)
+	warn("MSG: ")
+	warn(msg)
+
+	if status == true or status == "true" then
+		task.spawn(function()
+			local s, e = pcall(function()
+				task.wait(2)
+
+				if game.SoundService:FindFirstChild("Money") then
+					game.SoundService.Money:Play()
+				end
+
+				if game.SoundService:FindFirstChild("PurchaseCompleted") then
+					game.SoundService.PurchaseCompleted:Play()
+				end
+
+				showPurchasedUI(plr, pName)
+			end)
+
+			if e then
+				warn(e)
+			end
+		end)
+	else
+		plr:Kick("Error while giving product: ".. msg .. "; please contact nHub Support!")
+	end
+end)
 
 ms.ProcessReceipt = function(receipt)
 	local plr = game.Players:GetPlayerByUserId(receipt.PlayerId)
@@ -554,39 +668,7 @@ ms.ProcessReceipt = function(receipt)
 					game.SoundService.PurchaseCompleted:Play()
 				end
 
-				for _, v in pairs(plr.PlayerGui:GetChildren()) do
-					if v.Name == "HubUI" then
-						v.purchased.aboutBg.desc.Text = "Your purchase of <b>".. pName .."</b> went through!\n\nThe download instructions have been sent to you via discord."
-
-						v.purchased.Visible = true
-
-						local aboutBg = v.purchased.aboutBg
-
-						local originalSize = UDim2.new(0.278, 0, 0.713, 0)
-						local originalPosition = UDim2.new(0.361, 0, 0.143, 0)
-
-						aboutBg.AnchorPoint = Vector2.new(0, 0)
-						aboutBg.Position = UDim2.new(0.5, 0, 0.5, 0)
-						aboutBg.Size = UDim2.new(0, 0, 0, 0)
-						aboutBg.Visible = true
-						aboutBg.BackgroundTransparency = 1 
-
-						local tweenInfo = TweenInfo.new(
-							0.35,
-							Enum.EasingStyle.Back,
-							Enum.EasingDirection.Out
-						)
-
-						local goal = {
-							Size = originalSize,
-							Position = originalPosition,
-							BackgroundTransparency = 0
-						}
-
-						local tween = ts:Create(aboutBg, tweenInfo, goal)
-						tween:Play()
-					end
-				end
+				showPurchasedUI(plr, pName)
 			end)
 
 			if e then
