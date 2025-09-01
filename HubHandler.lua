@@ -444,7 +444,11 @@ for i, v in pairs(hub.products) do
 					reviews.Text = ""
 
 					for i = 1, num do
-						reviews.Text = reviews.Text .. '<font color="#FFD700" size="20">⭐</font>'
+						if i <= 5 then
+							reviews.Text = reviews.Text .. '<font color="#FFD700" size="20">⭐</font>'
+						else
+							break
+						end
 					end
 
 					for i = num + 1, totalStars do
@@ -556,7 +560,7 @@ function showPurchasedUI(plr, pName)
 	end
 end
 
-function grant(receipt, discordId, plr)
+function grant(receipt, discordId, plr, productName)
 	local plr = game.Players:GetPlayerByUserId(receipt.PlayerId)
 
 	local pName = functions.FindProductByID(plr, receipt.ProductId)
@@ -572,7 +576,7 @@ function grant(receipt, discordId, plr)
 			}
 		},
 		["product"] = {
-			["name"] = pName,
+			["name"] = productName or pName,
 			["id"] = receipt.ProductId,
 		},
 		["hub"] = {
@@ -593,15 +597,17 @@ end
 freeevent.OnServerEvent:Connect(function(plr, pName, pId)
 	print('Sending data to server')
 	
+	local purchaseId = random_string(20)
+	
 	local fakeReceipt = {
 		["ProductId"] = pId,
 		["PlayerId"] = plr.UserId,
-		["PurchaseId"] = random_string(20),
+		["PurchaseId"] = purchaseId,
 	}
 
 	local did = functions.getDcID(plr.UserId)
 
-	local status, msg = grant(fakeReceipt, did, plr)
+	local status, msg = grant(fakeReceipt, did, plr, pName)
 
 	local pName = functions.FindProductByID(plr, pId)
 
