@@ -12,16 +12,20 @@ local s, loadingErr = pcall(function()
 	warn("Requesting UI...")
 	local UILoader = require(129619868289742)
 
-	if config.Theme then
-		if config.Theme == "round" then
-			UILoader.load()
-		elseif config.Theme == "flat" then
-			UILoader.loadNoRound()
-		else
-			UILoader.load(config.Theme)
-		end
+	if game.StarterGui:FindFirstChild("HubUI") then
+		warn("CUSTOM UI FOUND: no support will be provided for custom UIs!")
 	else
-		UILoader.load()
+		if config.Theme then
+			if config.Theme == "round" then
+				UILoader.load()
+			elseif config.Theme == "flat" then
+				UILoader.loadNoRound()
+			else
+				UILoader.load(config.Theme)
+			end
+		else
+			UILoader.load()
+		end
 	end
 end)
 
@@ -295,7 +299,7 @@ for _, player in pairs(game.Players:GetChildren()) do
 				end
 				
 				if success == true or success == "true"  then
-					player.PlayerGui.HubUI.link.code.Text = "/link "..code
+					player.PlayerGui.HubUI.link.code.Text = "/link code:"..code
 				end
 				
 			else
