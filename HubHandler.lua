@@ -147,7 +147,7 @@ function setAbout(text)
 end
 
 function updateStats(hub) 
-	pcall(function()
+	local s, e = pcall(function()
 		for _, v in pairs(game.Players:GetChildren()) do
 			if v:FindFirstChild("PlayerGui") and 
 				v.PlayerGui:FindFirstChild("HubUI") and 
@@ -156,7 +156,7 @@ function updateStats(hub)
 
 				local home = v.PlayerGui.HubUI.home
 
-				home.owned_licences.Text = #ownedProducts
+				home.ownedProducts.Text = #ownedProducts
 				home.totalProducts.Text = productCount
 				home.totalSales.Text = hub.total_sales
 
@@ -172,6 +172,11 @@ function updateStats(hub)
 			end
 		end
 	end)
+	
+	if e then
+		warn("Error while updating stats: ")
+		warn(e)
+	end
 end
 
 
