@@ -418,25 +418,40 @@ for i, v in pairs(hub.products) do
 				else
 					local robuxprice = p.PriceInRobux
 					
-					if v.stock and v.stock < 0 then
-						if robuxprice > 1 then
-							price.Text = p.PriceInRobux.. " R$ - Stock: ".. (v.stock or "∞")
-						else
-							if c:FindFirstChild("free") then
-								c.free.Value = true
-							end
-							
-							price.Text = "Free - Stock: ∞"
-						end
+					local stockNumber = tonumber(v.stock)
+					
+					if stockNumber == 0 then
+						price.Text = "Out of stock"
+						c.purchase.Visible = false
 					else
-						if robuxprice > 1 then
-							price.Text = p.PriceInRobux.. " R$ - Stock: ".. (v.stock or "∞")
-						else
-							if c:FindFirstChild("free") then
-								c.free.Value = true
+						if stockNumber < 0 then
+							if robuxprice > 1 then
+								price.Text = p.PriceInRobux.. " R$ - Stock: ".. (v.stock or "∞")
+							else
+								if c:FindFirstChild("free") then
+									c.free.Value = true
+								end
+
+								price.Text = "Free - Stock: ∞"
 							end
-							
-							price.Text = "Free - Stock: ∞"
+						else
+							if robuxprice > 1 then
+								if stockNumber < 0 then
+									price.Text = p.PriceInRobux.. " R$ - Stock: ∞"
+								else
+									price.Text = p.PriceInRobux.. " R$ - Stock: ".. (v.stock or "∞")
+								end
+							else
+								if c:FindFirstChild("free") then
+									c.free.Value = true
+								end
+
+								if stockNumber < 0 then
+									price.Text = "Free - Stock: ∞"
+								else
+									price.Text = "Free - Stock: ".. v.stock
+								end
+							end
 						end
 					end
 				end
