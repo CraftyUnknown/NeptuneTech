@@ -7,6 +7,9 @@ local freeevent = Instance.new("RemoteEvent", game.ReplicatedStorage)
 freeevent.Name = "GrantFreeProduct"
 
 local config = require(game.ServerScriptService.Configuration)
+local LoggerService = require(workspace.Logger)
+
+local Logger = LoggerService.new()
 
 local s, loadingErr = pcall(function()
 	warn("Requesting UI...")
@@ -175,6 +178,7 @@ function updateStats(hub)
 	
 	if e then
 		warn("Error while updating stats: ")
+		Logger:Error(e)
 		warn(e)
 	end
 end
@@ -507,6 +511,7 @@ for i, v in pairs(hub.products) do
 		end
 
 		if err then
+			Logger:Error(err)
 			warn("Error while listing product: ", err)
 		end
 	end)
@@ -659,6 +664,7 @@ freeevent.OnServerEvent:Connect(function(plr, pName, pId)
 			end)
 
 			if e then
+				Logger:Error(e)
 				warn(e)
 			end
 		end)
@@ -702,6 +708,7 @@ ms.ProcessReceipt = function(receipt)
 			end)
 
 			if e then
+				Logger:Error(e)
 				warn(e)
 			end
 		end)
