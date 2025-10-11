@@ -7,7 +7,7 @@ local freeevent = Instance.new("RemoteEvent", game.ReplicatedStorage)
 freeevent.Name = "GrantFreeProduct"
 
 local config = require(game.ServerScriptService.Configuration)
-local LoggerService = require(workspace.Logger)
+local LoggerService = require(100480655648418)
 
 local Logger = LoggerService.new()
 
@@ -52,21 +52,25 @@ end
 
 local functions = require(126248524293032)
 
-local _found = false
+function removeDuplicateUI()
+	local _found = false
 
-for _, x in pairs(game.Players:GetChildren()) do
-	if x:IsA("Player") then
-		for _, v in pairs(x.PlayerGui:GetChildren()) do
-			if v.Name == "HubUI" then
-				if _found == true then
-					v:Destroy()
-				else
-					_found = true
+	for _, x in pairs(game.Players:GetChildren()) do
+		if x:IsA("Player") then
+			for _, v in pairs(x.PlayerGui:GetChildren()) do
+				if v.Name == "HubUI" then
+					if _found == true then
+						v:Destroy()
+					else
+						_found = true
+					end
 				end
 			end
 		end
 	end
 end
+
+removeDuplicateUI()
 
 local ui = game.StarterGui.HubUI
 local ui1 = game.StarterGui.HubUI
@@ -98,6 +102,8 @@ local ownedProducts = {}
 local productCount = 0
 
 wait()
+
+removeDuplicateUI()
 
 local function checkApiKey()
 	local success, response = pcall(function()
