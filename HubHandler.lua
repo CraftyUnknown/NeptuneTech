@@ -11,11 +11,20 @@ local LoggerService = require(100480655648418)
 
 local Logger = LoggerService.new()
 
+function localLog(msg, scriptName, typ)
+	local ev = game.ReplicatedStorage:FindFirstChild("LocalLogEvent")
+	
+	if ev then
+		ev:FireAllClients(msg, scriptName, typ)
+	end
+end
+
 local s, loadingErr = pcall(function()
 	warn("Requesting UI...")
 	local UILoader = require(129619868289742)
 
 	if game.StarterGui:FindFirstChild("HubUI") then
+		localLog("CUSTOM UI FOUND: no support will be provided for custom UIs!", script.Name, "Warn")
 		warn("CUSTOM UI FOUND: no support will be provided for custom UIs!")
 	else
 		if config.Theme then
@@ -182,9 +191,9 @@ function updateStats(hub)
 		end
 	end)
 	
-	if e then
+	if e then 
 		warn("Error while updating stats: ")
-		Logger:Error(e)
+		localLog("Error while updating stats: ".. e, script.Name, "Warn")
 		warn(e)
 	end
 end
@@ -263,6 +272,7 @@ for _, player in pairs(game.Players:GetChildren()) do
 
 		if e1 then
 			warn("Getting Owned Products Error: ".. e1)
+			localLog("Getting Owned Products Error: ".. e1, script.Name, "Warn")
 		end
 
 		wait()
@@ -308,6 +318,8 @@ for _, player in pairs(game.Players:GetChildren()) do
 				
 				warn("CODE STATUS:")
 				warn(success, msg)
+				
+				localLog("Code Status: ".. msg, script.Name)
 				
 				if success == false or success == "false" then
 					player:Kick(msg)
@@ -395,7 +407,7 @@ for _, player in pairs(game.Players:GetChildren()) do
 	end
 end
 
-print("Products: ", hub.products)
+print("Products received from server: ", hub.products)
 
 wait(.5)
 
@@ -428,7 +440,7 @@ for i, v in pairs(hub.products) do
 				else
 					local robuxprice = p.PriceInRobux
 					
-					local stockNumber = tonumber(v.stock)
+					local stockNumber = tonumber(v.stock) or -1
 					
 					if stockNumber == 0 then
 						price.Text = "Out of stock"
@@ -514,14 +526,17 @@ for i, v in pairs(hub.products) do
 
 		if success then
 			print("Successfully added product ", v.name)
+			localLog("Successfully added product ".. v.name, script.Name)
 		end
 
 		if err then
-			Logger:Error(err)
+			localLog("Error while listing product: ".. err, script.Name, "Warn")
 			warn("Error while listing product: ", err)
 		end
 	end)
 end
+
+localLog("Product amount (client count): ".. tostring(productCount), script.Name)
 
 updateStats(hub)
 
@@ -670,7 +685,7 @@ freeevent.OnServerEvent:Connect(function(plr, pName, pId)
 			end)
 
 			if e then
-				Logger:Error(e)
+				localLog(e, script.Name, "Warn")
 				warn(e)
 			end
 		end)
@@ -714,7 +729,7 @@ ms.ProcessReceipt = function(receipt)
 			end)
 
 			if e then
-				Logger:Error(e)
+				localLog(e, script.Name, "Warn")
 				warn(e)
 			end
 		end)
