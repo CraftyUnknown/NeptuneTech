@@ -387,7 +387,7 @@ for _, player in pairs(game.Players:GetChildren()) do
 				player.PlayerGui.HubUI.Link_Tab.Visible = true
 				local code = random_string(6)
 
-				player.PlayerGui.HubUI.Link_Tab.CodeBar_Holder.CodeBar.Code.Tex = "Contacting server..."
+				player.PlayerGui.HubUI.Link_Tab.CodeBar_Holder.CodeBar.Code.Text = "Contacting server..."
 
 				local success, msg = functions.createLinkCode(player.Name, player.UserId, code)
 
